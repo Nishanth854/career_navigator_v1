@@ -7,7 +7,7 @@ COPY frontend/ ./
 RUN npm run build
 
 # Stage 2: Build Backend & Final Image
-FROM python:3.9-bullseye
+FROM python:3.10-bullseye
 WORKDIR /app
 
 # Switch to root to install system packages
@@ -23,7 +23,7 @@ RUN apt-get update --fix-missing && apt-get install -y --no-install-recommends \
 
 # Copy backend requirements and install
 COPY backend/requirements.txt ./
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt --extra-index-url https://download.pytorch.org/whl/cpu
 
 # Download the spaCy model
 RUN python -m spacy download en_core_web_sm
