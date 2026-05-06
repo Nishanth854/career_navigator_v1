@@ -37,12 +37,25 @@ def health():
 # Serve Static Files (The built React app)
 # This assumes the 'static' folder exists (created by Dockerfile)
 if os.path.exists("./static"):
-    app.mount("/", StaticFiles(directory="./static", html=True), name="static")
+    # Serve assets directory directly for performance
+    if os.path.exists("./static/assets"):
+        app.mount("/assets", StaticFiles(directory="./static/assets"), name="assets")
 
-    # Catch-all route to serve index.html for any path not matched by API or files
-    # This is essential for React Router (SPA) to work
-    @app.exception_handler(404)
-    async def custom_404_handler(request, __):
+    # Catch-all route to serve files or index.html for SPA
+    @app.get("/{full_path:path}")
+    async def serve_frontend(full_path: str):
+        # Don't intercept API calls
+        if full_path.startswith("api/"):
+            from fastapi import HTTPException
+            raise HTTPException(status_code=404, detail="API endpoint not found")
+            
+        file_path = os.path.join("./static", full_path)
+        
+        # If the file exists (like favicon.ico, robots.txt), serve it
+        if os.path.isfile(file_path):
+            return FileResponse(file_path)
+            
+        # Otherwise, serve the React index.html
         return FileResponse("./static/index.html")
 
 if __name__ == "__main__":
