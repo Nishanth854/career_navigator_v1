@@ -10,3 +10,6 @@ pydantic
 python-dotenv
 spacy
 torch
+
+google-generativeai
+numpy
