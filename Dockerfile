@@ -7,14 +7,18 @@ COPY frontend/ ./
 RUN npm run build
 
 # Stage 2: Build Backend & Final Image
-FROM python:3.9-slim
+FROM python:3.9-bullseye
 WORKDIR /app
 
-# Install system dependencies for OCR and OpenCV
-RUN apt-get update && apt-get install -y \
+# Switch to root to install system packages
+USER root
+
+# Install system dependencies for OCR and OpenCV with retry logic
+RUN apt-get update --fix-missing && apt-get install -y --no-install-recommends \
     tesseract-ocr \
     libgl1-mesa-glx \
     libglib2.0-0 \
+    && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy backend requirements and install
