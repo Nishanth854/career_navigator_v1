@@ -13,3 +13,6 @@ torch
 
 google-generativeai
 numpy
+
+feedparser
+Pillow
