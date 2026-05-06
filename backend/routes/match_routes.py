@@ -1,0 +1,217 @@
+from fastapi import APIRouter, HTTPException
+import lancedb
+import pandas as pd
+
+# Initialize the router
+router = APIRouter()
+
+# Connect to the existing database
+try:
+    db = lancedb.connect("lancedb_data")
+    table = db.open_table("opportunities")
+except Exception as e:
+    print(f"Database connection error: {e}")
+
+@router.post("/find-matches")
+async def find_matches(student_data: dict):
+    """
+    Takes a dictionary containing 'skills' or 'raw_text' 
+    and returns matching internships/scholarships.
+    """
+    try:
+        # We use the 'Required_Skills' column for vector matching
+        # query_text can be the list of skills or the whole cleaned resume text
+        query_text = student_data.get("raw_text", "")
+        
+        if not query_text:
+            raise HTTPException(status_code=400, detail="No search text provided")
+
+        # Perform the Semantic Search
+        # .search() automatically handles the vectorization of the query
+        results = table.search(query_text).limit(5).to_list()
+
+        # Format the output for the Frontend
+        formatted_results = []
+        for res in results:
+            formatted_results.append({
+                "id": res.get("ID"),
+                "title": res.get("Title"),
+                "type": res.get("Type"),
+                "provider": res.get("Provider"),
+                "skills": res.get("Required_Skills"),
+                "match_score": round(res.get("_distance", 0), 2) # Distance shows how close the match is
+            })
+
+        return {"matches": formatted_results}
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@router.get("/categories")
+async def get_categories():
+    """Returns a list of unique opportunity types (Internship, Scholarship, etc.)"""
+    df = table.to_pandas()
+    categories = df['Type'].unique().tolist()
+    return {"categories": categories}
+
+from database.lancedb_setup import search_opportunities # Ensure this import exists
+
+@router.post("/manual-valuation")
+async def manual_valuation(data: dict):
+    # Extract data from frontend
+    name = data.get("name", "Student")
+    department = data.get("department", "General")
+    college = data.get("college", "University")
+    skills_raw = data.get("skills", "")
+    gpa = float(data.get("gpa", 0))
+
+    # New advanced fields
+    arrears = int(data.get("arrears", 0))
+    certifications_raw = data.get("certifications", "")
+    community = data.get("community", "OC")
+    family_income = data.get("familyIncome", "Below 2 Lakhs")
+    year = int(data.get("year", 1))
+    semester = int(data.get("semester", 1))
+
+    # Process skills and certifications
+    skills = [s.strip().lower() for s in skills_raw.split(",") if s.strip()]
+    certifications = [c.strip() for c in certifications_raw.split(",") if c.strip()]
+    
+    # Calculate score
+    score = int((gpa * 10) + (len(skills) * 5))
+    
+    # Add bonus for certifications
+    score += (len(certifications) * 5)
+    
+    # Penalty for arrears
+    score -= (arrears * 5)
+    
+    if score < 0:
+        score = 0
+    if score > 100:
+        score = 100
+    
+    # Search logic
+    from database.lancedb_setup import search_opportunities
+    query_text = f"{department} {' '.join(skills)} {' '.join(certifications)}"
+    matches = search_opportunities(query_text)
+    
+    # --- AI DYNAMIC RECOMMENDATIONS ---
+    import os
+    import json
+    from google import genai
+    from dotenv import load_dotenv
+
+    load_dotenv()
+    GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
+    client = genai.Client(api_key=GEMINI_API_KEY) if GEMINI_API_KEY else None
+    
+    ai_recommendations = {"internships": [], "scholarships": [], "events": []}
+    ai_strategy = "Connect your Gemini API key in the backend .env to unlock your AI Career Strategy!"
+    
+    if client:
+        try:
+            prompt = f"""
+            You are CareerNav AI. Analyze this student:
+            Name: {name}, Dept: {department}, Skills: {', '.join(skills)}, Certifications: {', '.join(certifications)}, GPA: {gpa}, Arrears: {arrears}.
+            Community: {community}, Annual Family Income: {family_income}.
+            Return ONLY a valid JSON object (no markdown, no backticks, strictly parseable JSON) with this structure:
+            {{
+                "strategy": "A powerful 2-sentence personalized career strategy emphasizing their strengths.",
+                "internships": [{{"title": "Role at Company", "url": "https://example.com/apply", "description": "Short explanation"}}],
+                "scholarships": [{{"title": "Scholarship Name", "url": "https://example.com", "description": "Short explanation"}}],
+                "events": [{{"title": "Hackathon/Event", "url": "https://example.com", "description": "Short explanation"}}]
+            }}
+            Provide exactly 2 highly relevant real-world online internships, 2 scholarships, and 2 hackathons/events with plausible real-world URLs.
+            """
+            response = client.models.generate_content(
+                model='gemini-flash-latest',
+                contents=prompt
+            )
+            raw_text = response.text.strip()
+            if raw_text.startswith("```json"):
+                raw_text = raw_text[7:-3].strip()
+            elif raw_text.startswith("```"):
+                raw_text = raw_text[3:-3].strip()
+            
+            parsed = json.loads(raw_text)
+            ai_strategy = parsed.get("strategy", ai_strategy)
+            ai_recommendations = {
+                "internships": parsed.get("internships", []),
+                "scholarships": parsed.get("scholarships", []),
+                "events": parsed.get("events", [])
+            }
+        except Exception as e:
+            print(f"Gemini evaluation error: {e}")
+            ai_strategy = "Your AI Strategy could not be generated due to a timeout. Please try again."
+
+    return {
+    "student_info": {
+        "name": name,
+        "department": department,
+        "college": college
+    },
+    "valuation_score": score,
+    "extracted_skills": skills,
+    "matches": matches,
+    "ai_strategy": ai_strategy,
+    "ai_recommendations": ai_recommendations
+}
+
+@router.post("/analyze-scheme")
+async def analyze_scheme(data: dict):
+    title = data.get("title", "Unknown Scheme")
+    url = data.get("url", "#")
+    type_str = data.get("type", "opportunity")
+    
+    import os
+    import json
+    from google import genai
+    from dotenv import load_dotenv
+
+    load_dotenv()
+    GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
+    client = genai.Client(api_key=GEMINI_API_KEY) if GEMINI_API_KEY else None
+    
+    if not client:
+        return {"status": "error", "message": "Gemini API key not configured."}
+        
+    try:
+        prompt = f"""
+        Act as an expert career advisor. The student clicked on an online {type_str} titled '{title}' with this URL: {url}.
+        Provide a highly realistic breakdown of what is usually required to apply for this.
+        Return ONLY a valid JSON object (no backticks, no markdown) with exactly this structure:
+        {{
+            "documents": ["list of 3-5 required documents"],
+            "procedure": ["step 1", "step 2", "step 3"]
+        }}
+        """
+        response = client.models.generate_content(
+            model='gemini-flash-latest',
+            contents=prompt
+        )
+        
+        raw_text = response.text.strip()
+        if raw_text.startswith("```json"):
+            raw_text = raw_text[7:-3].strip()
+        elif raw_text.startswith("```"):
+            raw_text = raw_text[3:-3].strip()
+            
+        parsed = json.loads(raw_text)
+        return {
+            "status": "success",
+            "title": title,
+            "url": url,
+            "documents": parsed.get("documents", ["Updated Resume", "College ID Card", "Academic Transcripts"]),
+            "procedure": parsed.get("procedure", ["Visit the official application portal.", "Fill out your personal and academic details.", "Upload the required documents and submit."])
+        }
+    except Exception as e:
+        print(f"Gemini scheme analysis error: {e}")
+        # Return graceful fallback
+        return {
+            "status": "success",
+            "title": title,
+            "url": url,
+            "documents": ["Updated Resume", "College ID Card", "Academic Transcripts"],
+            "procedure": ["Visit the official application portal.", "Fill out your personal and academic details.", "Upload the required documents and submit."]
+        }

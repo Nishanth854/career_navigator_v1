@@ -1,0 +1,33 @@
+# Node.js
+node_modules/
+frontend/node_modules/
+dist/
+frontend/dist/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+backend/.venv/
+env/
+venv/
+ENV/
+
+# Environment variables
+.env
+frontend/.env
+backend/.env
+
+# Local settings
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Scripts
+auto_push.ps1
