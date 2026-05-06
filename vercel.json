@@ -1,33 +1,9 @@
 {
   "version": 2,
-  "builds": [
-    {
-      "src": "frontend/package.json",
-      "use": "@vercel/static-build",
-      "config": {
-        "distDir": "dist",
-        "installCommand": "npm install",
-        "buildCommand": "npm run build"
-      }
-    }
-  ],
   "rewrites": [
     {
-      "source": "/api/:path*",
-      "destination": "https://nish9566-career-navigator-ai.hf.space/api/:path*"
-    },
-    {
       "source": "/(.*)",
-      "destination": "frontend/$1"
-    }
-  ],
-  "routes": [
-    {
-      "handle": "filesystem"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "frontend/index.html"
+      "destination": "https://nish9566-career-navigator-ai.hf.space/$1"
     }
   ]
 }
