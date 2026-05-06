@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 import os
-from google import genai
+import google.generativeai as genai
 from dotenv import load_dotenv
 
 load_dotenv() # Load from .env
@@ -11,12 +11,13 @@ router = APIRouter()
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 if GEMINI_API_KEY:
     try:
-        client = genai.Client(api_key=GEMINI_API_KEY)
+        genai.configure(api_key=GEMINI_API_KEY)
+        model = genai.GenerativeModel('gemini-pro')
     except Exception as e:
         print(f"Failed to configure Gemini: {e}")
-        client = None
+        model = None
 else:
-    client = None
+    model = None
 
 @router.post("/chat-support")
 async def chat_support(query: dict):
@@ -27,13 +28,10 @@ async def chat_support(query: dict):
     dept = context.get("department", "Unknown Dept")
     score = context.get("score", "Unknown")
     
-    if client:
+    if model:
         try:
             prompt = f"You are CareerNav AI, an advanced career counselor. The user is a student named {name} studying {dept} with a market valuation score of {score}. Respond to their query concisely and professionally in less than 3 sentences. User Query: {user_msg}"
-            response = client.models.generate_content(
-                model='gemini-flash-latest',
-                contents=prompt
-            )
+            response = model.generate_content(prompt)
             return {"response": response.text}
         except Exception as e:
             print(f"Gemini Error: {e}")
