@@ -9,4 +9,5 @@ python-multipart
 sentence-transformers
 pydantic
 python-dotenv
+spacy
 torch

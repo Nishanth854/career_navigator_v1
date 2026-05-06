@@ -25,6 +25,9 @@ RUN apt-get update --fix-missing && apt-get install -y --no-install-recommends \
 COPY backend/requirements.txt ./
 RUN pip install --no-cache-dir -r requirements.txt
 
+# Download the spaCy model
+RUN python -m spacy download en_core_web_sm
+
 # Copy backend source code
 COPY backend/ ./
 
