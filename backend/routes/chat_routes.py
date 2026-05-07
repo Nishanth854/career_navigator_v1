@@ -35,7 +35,7 @@ async def chat_support(query: dict):
             return {"response": response.text}
         except Exception as e:
             print(f"Gemini Error: {e}")
-            return {"response": f"Error: {str(e)}"}
+            return {"response": f"I'm sorry {name}, but my AI engine encountered an error connecting to Gemini. Try again later."}
     else:
         # Fallback Mock Response
         if "score" in user_msg.lower():
