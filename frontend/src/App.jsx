@@ -8,6 +8,7 @@ import Evaluate from './pages/Evaluate';
 import Updates from './pages/Updates';
 import About from './pages/About';
 import Account from './pages/Account';
+import Admin from './pages/Admin';
 
 // --- AUTH PAGE COMPONENT ---
 // ... (Auth logic unchanged, omitting to prevent accidental removal) ...
@@ -129,6 +130,7 @@ const App = () => {
           <Route index element={<Home />} />
           <Route path="evaluate" element={<Evaluate user={user} profile={profile} />} />
           <Route path="account" element={<Account user={user} profile={profile} />} />
+          <Route path="admin" element={<Admin user={user} />} />
           <Route path="updates" element={<Updates />} />
           <Route path="about" element={<About />} />
           <Route path="*" element={<Navigate to="/" replace />} />

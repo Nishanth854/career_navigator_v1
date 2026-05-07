@@ -1,8 +1,9 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { NavLink, Outlet } from 'react-router-dom';
-import { GraduationCap, LogOut, LayoutDashboard, Target, Bell, Info, User, MessageCircle, Menu, X } from 'lucide-react';
+import { GraduationCap, LogOut, LayoutDashboard, Target, Bell, Info, User, MessageCircle, Menu, X, ShieldCheck, UserCheck } from 'lucide-react';
 import { supabase } from '../supabaseClient';
 import Chatbot from './Chatbot';
+import { ADMIN_EMAIL } from '../pages/Admin';
 
 const Layout = ({ user, profile }) => {
   const [showProfile, setShowProfile] = useState(false);
@@ -57,7 +58,10 @@ const Layout = ({ user, profile }) => {
           <div className="relative">
             <button onClick={() => setShowProfile(!showProfile)} className="flex items-center gap-2 bg-black/40 border border-white/10 p-1.5 rounded-full pr-2 sm:pr-4 hover:bg-white/10 transition-all">
               <div className="w-7 h-7 sm:w-8 sm:h-8 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-full flex items-center justify-center text-[10px] font-black text-white shadow-lg">{displayName[0].toUpperCase()}</div>
-              <span className="text-xs font-bold text-slate-200 hidden sm:block">{displayName}</span>
+              <span className="text-xs font-bold text-slate-200 hidden sm:flex items-center gap-1">
+                {displayName}
+                {profile?.is_verified && <UserCheck size={14} className="text-blue-400" />}
+              </span>
             </button>
             {showProfile && (
               <div className="absolute right-0 mt-4 w-56 bg-black/80 backdrop-blur-3xl border border-white/10 rounded-2xl p-2 shadow-[0_10px_40px_rgba(0,0,0,0.8)] flex flex-col gap-1 z-50">
@@ -66,6 +70,9 @@ const Layout = ({ user, profile }) => {
                   <p className="text-sm font-bold text-white truncate">{user.email}</p>
                 </div>
                 <NavLink to="/account" onClick={() => setShowProfile(false)} className="w-full flex items-center gap-3 text-slate-300 p-3 text-sm font-medium hover:bg-white/10 hover:text-white rounded-xl transition-colors"><User size={16}/> Account Settings</NavLink>
+                {user.email === ADMIN_EMAIL && (
+                  <NavLink to="/admin" onClick={() => setShowProfile(false)} className="w-full flex items-center gap-3 text-indigo-300 p-3 text-sm font-bold hover:bg-indigo-500/10 hover:text-indigo-200 rounded-xl transition-colors"><ShieldCheck size={16}/> Admin Panel</NavLink>
+                )}
                 <button onClick={() => supabase.auth.signOut()} className="w-full flex items-center gap-3 text-rose-400 p-3 text-sm font-medium hover:bg-rose-500/10 rounded-xl transition-colors mt-1"><LogOut size={16}/> Disconnect Session</button>
               </div>
             )}
