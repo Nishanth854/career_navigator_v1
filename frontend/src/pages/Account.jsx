@@ -11,7 +11,7 @@ const Account = ({ profile, user }) => {
   const handleTestAlert = async () => {
     setTestAlertLoading(true);
     try {
-      const res = await fetch('http://127.0.0.1:8001/api/v1/send-alert', {
+      const res = await fetch('/api/v1/send-alert', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Trophy, Briefcase, GraduationCap, Target, BookOpen, Code, Users, X, CheckCircle2, Loader2, FileText, ArrowRight } from 'lucide-react';
 import { supabase } from '../supabaseClient';
 
-const API_BASE = "http://127.0.0.1:8001/api/v1";
+const API_BASE = "/api/v1";
 
 const CategorySection = ({ title, items, icon, colorClass, isOnline, onOnlineClick }) => (
   <div className="space-y-4">
