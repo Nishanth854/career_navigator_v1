@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../supabaseClient';
-import { ShieldCheck, UserCheck, XCircle, Search, FileText } from 'lucide-react';
+import { ShieldCheck, UserCheck, XCircle, Search, FileText, AlertTriangle } from 'lucide-react';
 
 // Hardcode your admin email here
 export const ADMIN_EMAIL = 'vnishanth854@gmail.com';
@@ -9,6 +9,7 @@ const Admin = ({ user }) => {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
+  const [fetchError, setFetchError] = useState(null);
 
   useEffect(() => {
     fetchUsers();
@@ -16,13 +17,15 @@ const Admin = ({ user }) => {
 
   const fetchUsers = async () => {
     setLoading(true);
+    setFetchError(null);
     const { data, error } = await supabase
       .from('profiles')
-      .select('*')
-      .order('created_at', { ascending: false });
+      .select('*');
+      // Removed .order('created_at') just in case the column doesn't exist!
     
     if (error) {
       console.error("Error fetching users:", error);
+      setFetchError(error.message);
     } else {
       setUsers(data || []);
     }
@@ -41,7 +44,7 @@ const Admin = ({ user }) => {
         
       if (error) throw error;
     } catch (err) {
-      alert("Failed to update verification status. Please make sure the 'is_verified' boolean column exists in your Supabase 'profiles' table.");
+      alert(`Failed to update. Supabase Error: ${err.message}. Please make sure 'is_verified' column exists in Supabase!`);
       console.error(err);
       // Revert on failure
       fetchUsers();
@@ -89,6 +92,12 @@ const Admin = ({ user }) => {
 
       {loading ? (
         <div className="text-center py-20 text-slate-400">Loading user database...</div>
+      ) : fetchError ? (
+        <div className="bg-rose-500/10 border border-rose-500/20 p-8 rounded-3xl text-center">
+          <AlertTriangle className="w-16 h-16 text-rose-500 mx-auto mb-4" />
+          <h2 className="text-xl font-bold text-white mb-2">Database Error</h2>
+          <p className="text-rose-400 max-w-lg mx-auto">{fetchError}</p>
+        </div>
       ) : (
         <div className="bg-white/[0.02] border border-white/10 rounded-3xl overflow-hidden backdrop-blur-xl">
           <div className="overflow-x-auto">
@@ -114,7 +123,7 @@ const Admin = ({ user }) => {
                             {u.full_name || 'Unknown'}
                             {u.is_verified && <UserCheck className="w-4 h-4 text-blue-400" />}
                           </p>
-                          <p className="text-xs text-slate-500">Joined: {new Date(u.created_at).toLocaleDateString()}</p>
+                          <p className="text-xs text-slate-500">Joined: {u.created_at ? new Date(u.created_at).toLocaleDateString() : 'N/A'}</p>
                         </div>
                       </div>
                     </td>
