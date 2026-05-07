@@ -3,7 +3,7 @@ import { supabase } from '../supabaseClient';
 import { ShieldCheck, UserCheck, XCircle, Search, FileText } from 'lucide-react';
 
 // Hardcode your admin email here
-export const ADMIN_EMAIL = 'admin@careernav.com';
+export const ADMIN_EMAIL = 'vnishanth854@gmail.com';
 
 const Admin = ({ user }) => {
   const [users, setUsers] = useState([]);
