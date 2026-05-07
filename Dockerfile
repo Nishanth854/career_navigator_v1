@@ -1,9 +1,9 @@
 # Stage 1: Build Frontend
 FROM node:18-alpine AS frontend-builder
-WORKDIR /app/frontend
-COPY frontend/package*.json ./
+WORKDIR /app
+COPY package*.json ./
 RUN npm install
-COPY frontend/ ./
+COPY . ./
 
 # Accept build arguments for Supabase (Vite needs these at build time)
 ARG VITE_SUPABASE_URL
@@ -39,7 +39,7 @@ RUN python -m spacy download en_core_web_sm
 COPY backend/ ./
 
 # Copy built frontend assets from Stage 1 to a directory FastAPI can serve
-COPY --from=frontend-builder /app/frontend/dist ./static
+COPY --from=frontend-builder /app/dist ./static
 
 # Expose the port Hugging Face Spaces expects
 EXPOSE 7860

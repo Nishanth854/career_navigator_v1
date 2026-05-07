@@ -1,11 +1,8 @@
 {
-  "outputDirectory": "dist",
-  "routes": [
+  "rewrites": [
     {
-      "src": "/api/(.*)",
-      "dest": "https://nish9566-career-navigator-ai.hf.space/api/$1"
-    },
-    { "handle": "filesystem" },
-    { "src": "/(.*)", "dest": "/index.html" }
+      "source": "/api/(.*)",
+      "destination": "https://nish9566-career-navigator-ai.hf.space/api/$1"
+    }
   ]
 }
