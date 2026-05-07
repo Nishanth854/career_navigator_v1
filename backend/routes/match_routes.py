@@ -99,18 +99,19 @@ async def manual_valuation(data: dict):
     # --- AI DYNAMIC RECOMMENDATIONS ---
     import os
     import json
-    from google import genai
+    import google.generativeai as genai
     from dotenv import load_dotenv
 
     load_dotenv()
     GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
-    client = genai.Client(api_key=GEMINI_API_KEY) if GEMINI_API_KEY else None
     
     ai_recommendations = {"internships": [], "scholarships": [], "events": []}
     ai_strategy = "Connect your Gemini API key in the backend .env to unlock your AI Career Strategy!"
     
-    if client:
+    if GEMINI_API_KEY:
         try:
+            genai.configure(api_key=GEMINI_API_KEY)
+            model = genai.GenerativeModel('gemini-flash-latest')
             prompt = f"""
             You are CareerNav AI. Analyze this student:
             Name: {name}, Dept: {department}, Skills: {', '.join(skills)}, Certifications: {', '.join(certifications)}, GPA: {gpa}, Arrears: {arrears}.
@@ -124,10 +125,7 @@ async def manual_valuation(data: dict):
             }}
             Provide exactly 2 highly relevant real-world online internships, 2 scholarships, and 2 hackathons/events with plausible real-world URLs.
             """
-            response = client.models.generate_content(
-                model='gemini-flash-latest',
-                contents=prompt
-            )
+            response = model.generate_content(prompt)
             raw_text = response.text.strip()
             if raw_text.startswith("```json"):
                 raw_text = raw_text[7:-3].strip()
@@ -166,17 +164,18 @@ async def analyze_scheme(data: dict):
     
     import os
     import json
-    from google import genai
+    import google.generativeai as genai
     from dotenv import load_dotenv
 
     load_dotenv()
     GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
-    client = genai.Client(api_key=GEMINI_API_KEY) if GEMINI_API_KEY else None
     
-    if not client:
+    if not GEMINI_API_KEY:
         return {"status": "error", "message": "Gemini API key not configured."}
         
     try:
+        genai.configure(api_key=GEMINI_API_KEY)
+        model = genai.GenerativeModel('gemini-flash-latest')
         prompt = f"""
         Act as an expert career advisor. The student clicked on an online {type_str} titled '{title}' with this URL: {url}.
         Provide a highly realistic breakdown of what is usually required to apply for this.
@@ -186,10 +185,7 @@ async def analyze_scheme(data: dict):
             "procedure": ["step 1", "step 2", "step 3"]
         }}
         """
-        response = client.models.generate_content(
-            model='gemini-flash-latest',
-            contents=prompt
-        )
+        response = model.generate_content(prompt)
         
         raw_text = response.text.strip()
         if raw_text.startswith("```json"):
