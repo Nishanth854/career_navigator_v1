@@ -1,0 +1,9 @@
+{
+  "builds": [],
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "https://nish9566-career-navigator-ai.hf.space/$1"
+    }
+  ]
+}

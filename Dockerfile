@@ -1,9 +1,9 @@
 # Stage 1: Build Frontend
 FROM node:18-alpine AS frontend-builder
 WORKDIR /app
-COPY package*.json ./
+COPY frontend/package*.json ./
 RUN npm install
-COPY . ./
+COPY frontend/ ./
 
 # Accept build arguments for Supabase (Vite needs these at build time)
 ARG VITE_SUPABASE_URL
