@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../supabaseClient';
-import { ShieldCheck, UserCheck, XCircle, Search, FileText, AlertTriangle } from 'lucide-react';
+import { ShieldCheck, UserCheck, XCircle, Search, FileText, AlertTriangle, Eye } from 'lucide-react';
 
 // Hardcode your admin email here
 export const ADMIN_EMAIL = 'vnishanth854@gmail.com';
@@ -10,6 +10,7 @@ const Admin = ({ user }) => {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [fetchError, setFetchError] = useState(null);
+  const [selectedUser, setSelectedUser] = useState(null);
 
   useEffect(() => {
     fetchUsers();
@@ -134,16 +135,22 @@ const Admin = ({ user }) => {
                     <td className="p-4">
                       {u.aadhar_url ? (
                         <a href={u.aadhar_url} target="_blank" rel="noreferrer" className="flex items-center gap-2 text-xs font-bold text-indigo-400 hover:text-indigo-300 transition-colors bg-indigo-500/10 px-3 py-1.5 rounded-lg w-fit">
-                          <FileText size={14} /> View Aadhar
+                          <FileText size={14} /> Aadhar
                         </a>
                       ) : (
                         <span className="text-xs text-slate-600">No Document</span>
                       )}
                     </td>
-                    <td className="p-4 text-right">
+                    <td className="p-4 text-right flex items-center justify-end gap-2">
+                      <button 
+                        onClick={() => setSelectedUser(u)}
+                        className="px-3 py-2 rounded-xl text-sm font-bold bg-white/5 text-slate-300 border border-white/10 hover:bg-white/10 transition-all flex items-center gap-2"
+                      >
+                        <Eye size={16} /> View
+                      </button>
                       <button 
                         onClick={() => toggleVerification(u.id, u.is_verified)}
-                        className={`px-4 py-2 rounded-xl text-sm font-bold transition-all ${
+                        className={`px-4 py-2 rounded-xl text-sm font-bold transition-all w-28 text-center ${
                           u.is_verified 
                             ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 hover:bg-emerald-500/20 hover:border-emerald-500/40' 
                             : 'bg-white/5 text-slate-300 border border-white/10 hover:bg-white/10'
@@ -161,6 +168,89 @@ const Admin = ({ user }) => {
                 )}
               </tbody>
             </table>
+          </div>
+        </div>
+      )}
+
+      {/* VIEW FULL DETAILS MODAL */}
+      {selectedUser && (
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-[#0f172a] border border-slate-800 w-full max-w-2xl rounded-3xl overflow-hidden shadow-2xl animate-in fade-in zoom-in-95 duration-300">
+            <div className="p-6 border-b border-slate-800 flex items-center justify-between bg-slate-900/50">
+              <h2 className="text-xl font-black text-white flex items-center gap-2">
+                <UserCheck className="text-indigo-500" /> Student Profile Details
+              </h2>
+              <button onClick={() => setSelectedUser(null)} className="p-2 bg-white/5 hover:bg-white/10 rounded-full text-slate-400 hover:text-white transition-colors">
+                <XCircle size={20} />
+              </button>
+            </div>
+            
+            <div className="p-6 space-y-6">
+              <div className="grid grid-cols-2 gap-4">
+                <div className="bg-slate-800/50 p-4 rounded-2xl border border-slate-700/50">
+                  <p className="text-[10px] uppercase font-bold tracking-widest text-slate-500 mb-1">Full Name</p>
+                  <p className="text-sm font-bold text-slate-200">{selectedUser.full_name || 'N/A'}</p>
+                </div>
+                <div className="bg-slate-800/50 p-4 rounded-2xl border border-slate-700/50">
+                  <p className="text-[10px] uppercase font-bold tracking-widest text-slate-500 mb-1">Date of Birth</p>
+                  <p className="text-sm font-bold text-slate-200">{selectedUser.dob || 'N/A'}</p>
+                </div>
+                <div className="bg-slate-800/50 p-4 rounded-2xl border border-slate-700/50 col-span-2">
+                  <p className="text-[10px] uppercase font-bold tracking-widest text-slate-500 mb-1">College</p>
+                  <p className="text-sm font-bold text-slate-200">{selectedUser.college || 'N/A'}</p>
+                </div>
+                <div className="bg-slate-800/50 p-4 rounded-2xl border border-slate-700/50 col-span-2">
+                  <p className="text-[10px] uppercase font-bold tracking-widest text-slate-500 mb-1">Department</p>
+                  <p className="text-sm font-bold text-slate-200">{selectedUser.department || 'N/A'}</p>
+                </div>
+              </div>
+
+              <div className="pt-4 border-t border-slate-800">
+                <h3 className="text-sm font-bold text-slate-400 mb-4 uppercase tracking-wider">Uploaded Documents</h3>
+                <div className="flex gap-4">
+                  {selectedUser.aadhar_url ? (
+                    <a href={selectedUser.aadhar_url} target="_blank" rel="noreferrer" className="flex items-center gap-2 bg-indigo-500/10 border border-indigo-500/30 text-indigo-400 px-4 py-3 rounded-xl hover:bg-indigo-500/20 transition-colors text-sm font-bold flex-1 justify-center">
+                      <FileText size={16} /> View Aadhar Card
+                    </a>
+                  ) : (
+                    <div className="flex items-center gap-2 bg-slate-800/50 border border-slate-700/50 text-slate-500 px-4 py-3 rounded-xl text-sm font-bold flex-1 justify-center">
+                      <FileText size={16} /> No Aadhar Uploaded
+                    </div>
+                  )}
+                  {selectedUser.pan_url ? (
+                    <a href={selectedUser.pan_url} target="_blank" rel="noreferrer" className="flex items-center gap-2 bg-blue-500/10 border border-blue-500/30 text-blue-400 px-4 py-3 rounded-xl hover:bg-blue-500/20 transition-colors text-sm font-bold flex-1 justify-center">
+                      <FileText size={16} /> View PAN Card
+                    </a>
+                  ) : (
+                    <div className="flex items-center gap-2 bg-slate-800/50 border border-slate-700/50 text-slate-500 px-4 py-3 rounded-xl text-sm font-bold flex-1 justify-center">
+                      <FileText size={16} /> No PAN Uploaded
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            <div className="p-4 border-t border-slate-800 bg-slate-900/50 flex justify-end gap-3">
+              <button 
+                onClick={() => setSelectedUser(null)}
+                className="px-6 py-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold transition-colors text-sm"
+              >
+                Close Details
+              </button>
+              <button 
+                onClick={() => {
+                  toggleVerification(selectedUser.id, selectedUser.is_verified);
+                  setSelectedUser({...selectedUser, is_verified: !selectedUser.is_verified});
+                }}
+                className={`px-6 py-3 rounded-xl font-bold transition-all text-sm flex items-center gap-2 ${
+                  selectedUser.is_verified 
+                    ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 hover:bg-emerald-500/20' 
+                    : 'bg-indigo-600 text-white hover:bg-indigo-500 shadow-lg shadow-indigo-500/25'
+                }`}
+              >
+                {selectedUser.is_verified ? 'Revoke Verification' : 'Verify Student Now'}
+              </button>
+            </div>
           </div>
         </div>
       )}
