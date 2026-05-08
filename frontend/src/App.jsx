@@ -17,23 +17,40 @@ const AuthPage = () => {
   const [loading, setLoading] = useState(false);
   const [showOtp, setShowOtp] = useState(false);
   const [formData, setFormData] = useState({ email: '', password: '', username: '', mobile: '', otp: '' });
+  const [expectedOtp, setExpectedOtp] = useState('');
 
   const handleAuth = async (e) => {
     e.preventDefault();
     if (isRegistering && !showOtp) {
       if (!formData.mobile) return alert("Please enter a mobile number.");
       setLoading(true);
-      setTimeout(() => {
-        setLoading(false);
+      
+      const generatedOtp = Math.floor(100000 + Math.random() * 900000).toString();
+      setExpectedOtp(generatedOtp);
+      
+      try {
+        await fetch('/api/v1/send-alert', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ 
+            phone: formData.mobile, 
+            email: formData.email,
+            message: `Your StudentMate registration OTP is: ${generatedOtp}. Do not share this code with anyone.` 
+          })
+        });
         setShowOtp(true);
-      }, 1500);
+      } catch (err) {
+        alert("Failed to send OTP: " + err.message);
+      } finally {
+        setLoading(false);
+      }
       return;
     }
 
     setLoading(true);
     try {
       if (isRegistering && showOtp) {
-        if (formData.otp !== "123456") throw new Error("Invalid Demo OTP. Please use 123456");
+        if (formData.otp !== expectedOtp) throw new Error("Invalid OTP. Please check your SMS/Email and try again.");
         
         const { error } = await supabase.auth.signUp({
           email: formData.email, password: formData.password,
@@ -71,8 +88,8 @@ const AuthPage = () => {
           ) : (
             <div className="space-y-4 animate-in fade-in zoom-in-95 duration-300">
               <div className="bg-indigo-500/10 border border-indigo-500/30 p-4 rounded-2xl text-center">
-                <p className="text-[10px] text-indigo-300 font-bold uppercase tracking-widest mb-1">Demo Mode</p>
-                <p className="text-xs text-slate-300">An OTP was sent to {formData.mobile}. For this demo, enter <span className="font-bold text-white bg-indigo-500/20 px-2 py-0.5 rounded">123456</span></p>
+                <p className="text-[10px] text-indigo-300 font-bold uppercase tracking-widest mb-1">Verification Required</p>
+                <p className="text-xs text-slate-300">A secure 6-digit OTP has been sent to your mobile number and email. Please enter it below.</p>
               </div>
               <input type="text" required placeholder="Enter 6-digit OTP" className="w-full bg-black/40 border border-white/10 rounded-2xl p-4 text-white outline-none focus:border-indigo-500 transition-colors text-center font-black tracking-[0.5em] text-2xl" onChange={(e) => setFormData({...formData, otp: e.target.value})} maxLength={6} />
               <button className="w-full bg-green-600 hover:bg-green-500 py-4 rounded-2xl font-bold text-white transition-all shadow-lg shadow-green-500/25 mt-2">{loading ? 'Verifying...' : 'Verify & Register'}</button>
