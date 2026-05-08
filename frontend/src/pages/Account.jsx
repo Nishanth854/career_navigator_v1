@@ -346,7 +346,6 @@ const Account = ({ profile, user }) => {
                   <a href={profile.pan_url} target="_blank" rel="noreferrer" className="text-xs font-bold text-blue-400 hover:text-blue-300 bg-blue-500/10 px-3 py-1.5 rounded-lg transition-colors">View</a>
                 )}
               </div>
-              </div>
               {/* NEW DOCUMENT UPLOAD ROWS */}
               {['community', 'income', 'transcript'].map((docType) => (
                 <div key={docType} className="bg-slate-800/50 p-3 rounded-xl border border-slate-700/50 flex items-center justify-between">
