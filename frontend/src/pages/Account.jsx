@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { User, FileText, Calendar, Building2, BookOpen, BellRing, Mail, Smartphone, DollarSign, Briefcase, MapPin, Heart, Activity, CheckCircle2 } from 'lucide-react';
+import { User, FileText, Calendar, Building2, BookOpen, BellRing, Mail, Smartphone, DollarSign, Briefcase, MapPin, Heart, Activity, CheckCircle2, Upload } from 'lucide-react';
 import { supabase } from '../supabaseClient';
 
 const Account = ({ profile, user }) => {
   const [activeTab, setActiveTab] = useState('personal'); // personal, academic, financial
   const [loading, setLoading] = useState(false);
+  const [uploadingDoc, setUploadingDoc] = useState(null);
   const [message, setMessage] = useState('');
 
   // Personal Info State
@@ -66,6 +67,39 @@ const Account = ({ profile, user }) => {
       alert("Error saving phone number: " + err.message);
     } finally {
       setSavingPhone(false);
+    }
+  };
+
+  const handleDocumentUpload = async (e, docType) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    setUploadingDoc(docType);
+    try {
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${user.id}/${docType}-${Date.now()}.${fileExt}`;
+      const { data, error: uploadError } = await supabase.storage
+        .from('documents')
+        .upload(fileName, file);
+        
+      if (uploadError) throw uploadError;
+      
+      const { data: publicData } = supabase.storage
+        .from('documents')
+        .getPublicUrl(data.path);
+        
+      const publicUrl = publicData.publicUrl;
+      const updateData = {};
+      updateData[`${docType}_url`] = publicUrl;
+      
+      const { error: dbError } = await supabase.from('profiles').update(updateData).eq('id', user.id);
+      if (dbError) throw dbError;
+      
+      alert(`${docType.replace('_', ' ')} uploaded successfully!`);
+      window.location.reload();
+    } catch (err) {
+      alert(`Error uploading document: ${err.message}`);
+    } finally {
+      setUploadingDoc(null);
     }
   };
 
@@ -312,6 +346,30 @@ const Account = ({ profile, user }) => {
                   <a href={profile.pan_url} target="_blank" rel="noreferrer" className="text-xs font-bold text-blue-400 hover:text-blue-300 bg-blue-500/10 px-3 py-1.5 rounded-lg transition-colors">View</a>
                 )}
               </div>
+              </div>
+              {/* NEW DOCUMENT UPLOAD ROWS */}
+              {['community', 'income', 'transcript'].map((docType) => (
+                <div key={docType} className="bg-slate-800/50 p-3 rounded-xl border border-slate-700/50 flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 bg-blue-500/10 text-blue-400 rounded-lg"><FileText size={16}/></div>
+                    <div>
+                      <p className="font-bold text-sm text-slate-200 capitalize">{docType === 'transcript' ? 'Academic Transcript' : docType + ' Certificate'}</p>
+                      <p className={`text-[10px] font-bold uppercase ${profile?.[`${docType}_url`] ? 'text-emerald-400' : 'text-slate-500'}`}>
+                        {profile?.[`${docType}_url`] ? 'Verified' : 'Pending'}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    {profile?.[`${docType}_url`] && (
+                      <a href={profile[`${docType}_url`]} target="_blank" rel="noreferrer" className="text-xs font-bold text-blue-400 hover:text-blue-300 bg-blue-500/10 px-3 py-1.5 rounded-lg transition-colors">View</a>
+                    )}
+                    <label className={`relative cursor-pointer flex items-center justify-center text-xs font-bold px-3 py-1.5 rounded-lg transition-colors ${profile?.[`${docType}_url`] ? 'text-slate-400 hover:text-white bg-slate-700/50 hover:bg-slate-700' : 'text-indigo-400 hover:text-indigo-300 bg-indigo-500/10 hover:bg-indigo-500/20'} ${uploadingDoc === docType ? 'opacity-50 pointer-events-none' : ''}`}>
+                      <input type="file" accept="image/*,.pdf" className="sr-only" onChange={(e) => handleDocumentUpload(e, docType)} disabled={uploadingDoc === docType} />
+                      {uploadingDoc === docType ? '...' : (profile?.[`${docType}_url`] ? 'Replace' : 'Upload')}
+                    </label>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
 
