@@ -4,6 +4,7 @@ import { GraduationCap, LogOut, LayoutDashboard, Target, Bell, Info, User, Messa
 import { supabase } from '../supabaseClient';
 import Chatbot from './Chatbot';
 import { ADMIN_EMAIL } from '../pages/Admin';
+import { logoBase64 } from '../logoData';
 
 const Layout = ({ user, profile }) => {
   const [showProfile, setShowProfile] = useState(false);
@@ -33,7 +34,7 @@ const Layout = ({ user, profile }) => {
       <nav className="fixed top-6 left-1/2 -translate-x-1/2 z-50 w-[95%] max-w-6xl bg-white/[0.03] backdrop-blur-3xl border border-white/10 rounded-full h-16 flex items-center justify-between px-6 shadow-[0_10px_40px_rgba(0,0,0,0.5)]">
         <div className="flex items-center gap-6">
           <div className="flex items-center gap-2 group cursor-pointer">
-              <img src="/logo.png" alt="StudentMate Logo" className="w-10 h-10 rounded-xl object-contain border border-indigo-500/50 group-hover:shadow-[0_0_20px_rgba(99,102,241,0.5)] transition-all bg-white p-1" />
+              <img src={logoBase64} alt="StudentMate Logo" className="w-10 h-10 rounded-xl object-contain border border-indigo-500/50 group-hover:shadow-[0_0_20px_rgba(99,102,241,0.5)] transition-all bg-white p-1" />
               <span className="text-xl font-black text-white hidden sm:block tracking-tight">StudentMate</span>
           </div>
           <div className="hidden md:flex items-center gap-2 ml-4">
