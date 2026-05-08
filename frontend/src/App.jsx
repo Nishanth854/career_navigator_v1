@@ -93,7 +93,13 @@ const AuthPage = () => {
               </div>
               <input type="text" required placeholder="Enter 6-digit OTP" className="w-full bg-black/40 border border-white/10 rounded-2xl p-4 text-white outline-none focus:border-indigo-500 transition-colors text-center font-black tracking-[0.5em] text-2xl" onChange={(e) => setFormData({...formData, otp: e.target.value})} maxLength={6} />
               <button className="w-full bg-green-600 hover:bg-green-500 py-4 rounded-2xl font-bold text-white transition-all shadow-lg shadow-green-500/25 mt-2">{loading ? 'Verifying...' : 'Verify & Register'}</button>
-              <button type="button" onClick={() => setShowOtp(false)} className="w-full text-slate-500 text-sm mt-4 hover:text-white transition-colors">Cancel</button>
+              
+              <div className="mt-4 p-3 border border-dashed border-slate-700 rounded-xl text-center bg-black/20">
+                <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest mb-1">Testing Fallback</p>
+                <p className="text-xs text-slate-400">If you didn't receive the OTP due to telecom blocklists, use code: <span className="font-bold text-white">{expectedOtp}</span></p>
+              </div>
+
+              <button type="button" onClick={() => setShowOtp(false)} className="w-full text-slate-500 text-sm mt-2 hover:text-white transition-colors">Cancel</button>
             </div>
           )}
         </form>
