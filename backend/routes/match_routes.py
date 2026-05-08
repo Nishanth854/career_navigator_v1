@@ -72,6 +72,10 @@ async def manual_valuation(data: dict):
     family_income = data.get("familyIncome", "Below 2 Lakhs")
     year = int(data.get("year", 1))
     semester = int(data.get("semester", 1))
+    
+    # Startup fields
+    startup_title = data.get("startupTitle", "").strip()
+    startup_idea = data.get("startupIdea", "").strip()
 
     # Process skills and certifications
     skills = [s.strip().lower() for s in skills_raw.split(",") if s.strip()]
@@ -105,25 +109,30 @@ async def manual_valuation(data: dict):
     load_dotenv()
     GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
     
-    ai_recommendations = {"internships": [], "scholarships": [], "events": []}
+    ai_recommendations = {"internships": [], "scholarships": [], "events": [], "startup_subsidies": []}
     ai_strategy = "Connect your Gemini API key in the backend .env to unlock your AI Career Strategy!"
     
     if GEMINI_API_KEY:
         try:
             genai.configure(api_key=GEMINI_API_KEY)
             model = genai.GenerativeModel('gemini-flash-latest')
+            
+            startup_context = f"Startup Idea/Project: '{startup_title}'. Description: '{startup_idea}'." if startup_title or startup_idea else ""
+            
             prompt = f"""
             You are StudentMate AI. Analyze this student:
             Name: {name}, Dept: {department}, Skills: {', '.join(skills)}, Certifications: {', '.join(certifications)}, GPA: {gpa}, Arrears: {arrears}.
             Community: {community}, Annual Family Income: {family_income}.
+            {startup_context}
             Return ONLY a valid JSON object (no markdown, no backticks, strictly parseable JSON) with this structure:
             {{
                 "strategy": "A powerful 2-sentence personalized career strategy emphasizing their strengths.",
                 "internships": [{{"title": "Role at Company", "url": "https://example.com/apply", "description": "Short explanation"}}],
                 "scholarships": [{{"title": "Scholarship Name", "url": "https://example.com", "description": "Short explanation"}}],
-                "events": [{{"title": "Hackathon/Event", "url": "https://example.com", "description": "Short explanation"}}]
+                "events": [{{"title": "Hackathon/Event", "url": "https://example.com", "description": "Short explanation"}}],
+                "startup_subsidies": [{{"title": "Subsidy/Grant Name", "url": "https://example.com", "description": "Short explanation"}}]
             }}
-            Provide exactly 2 highly relevant real-world online internships, 2 scholarships, and 2 hackathons/events with plausible real-world URLs.
+            Provide exactly 2 highly relevant real-world online internships, 2 scholarships, 2 hackathons/events, and (if they provided a startup idea) 2 startup subsidies/grants with plausible real-world URLs.
             """
             response = model.generate_content(prompt)
             raw_text = response.text.strip()
@@ -137,7 +146,8 @@ async def manual_valuation(data: dict):
             ai_recommendations = {
                 "internships": parsed.get("internships", []),
                 "scholarships": parsed.get("scholarships", []),
-                "events": parsed.get("events", [])
+                "events": parsed.get("events", []),
+                "startup_subsidies": parsed.get("startup_subsidies", [])
             }
         except Exception as e:
             print(f"Gemini evaluation error: {e}")

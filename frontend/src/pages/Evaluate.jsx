@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Trophy, Briefcase, GraduationCap, Target, BookOpen, Code, Users, X, CheckCircle2, Loader2, FileText, ArrowRight } from 'lucide-react';
+import { Trophy, Briefcase, GraduationCap, Target, BookOpen, Code, Users, X, CheckCircle2, Loader2, FileText, ArrowRight, Rocket } from 'lucide-react';
 import { supabase } from '../supabaseClient';
 
 const API_BASE = "/api/v1";
@@ -56,7 +56,9 @@ const Evaluate = ({ user, profile }) => {
     skills: '',
     certifications: '',
     community: 'OC',
-    familyIncome: 'Below 2 Lakhs'
+    familyIncome: 'Below 2 Lakhs',
+    startupTitle: '',
+    startupIdea: ''
   });
 
   // Modal State
@@ -99,7 +101,9 @@ const Evaluate = ({ user, profile }) => {
         skills: manualData.skills,
         certifications: manualData.certifications,
         community: manualData.community,
-        familyIncome: manualData.familyIncome
+        familyIncome: manualData.familyIncome,
+        startupTitle: manualData.startupTitle,
+        startupIdea: manualData.startupIdea
       };
 
       const res = await fetch(`${API_BASE}/manual-valuation`, {
@@ -138,10 +142,11 @@ const Evaluate = ({ user, profile }) => {
             </div>
 
             {/* TABS */}
-            <div className="flex bg-slate-800/50 p-1 rounded-xl mb-6">
-              <button onClick={() => setActiveTab('academics')} type="button" className={`flex-1 py-2 text-xs font-bold rounded-lg flex items-center justify-center gap-2 transition-all ${activeTab === 'academics' ? 'bg-indigo-600 text-white' : 'text-slate-400 hover:text-slate-200'}`}><BookOpen size={14}/> Academics</button>
-              <button onClick={() => setActiveTab('skills')} type="button" className={`flex-1 py-2 text-xs font-bold rounded-lg flex items-center justify-center gap-2 transition-all ${activeTab === 'skills' ? 'bg-indigo-600 text-white' : 'text-slate-400 hover:text-slate-200'}`}><Code size={14}/> Skills</button>
-              <button onClick={() => setActiveTab('demo')} type="button" className={`flex-1 py-2 text-xs font-bold rounded-lg flex items-center justify-center gap-2 transition-all ${activeTab === 'demo' ? 'bg-indigo-600 text-white' : 'text-slate-400 hover:text-slate-200'}`}><Users size={14}/> Profile</button>
+            <div className="flex bg-slate-800/50 p-1 rounded-xl mb-6 flex-wrap gap-1">
+              <button onClick={() => setActiveTab('academics')} type="button" className={`flex-1 min-w-[100px] py-2 text-[10px] sm:text-xs font-bold rounded-lg flex items-center justify-center gap-1 sm:gap-2 transition-all ${activeTab === 'academics' ? 'bg-indigo-600 text-white' : 'text-slate-400 hover:text-slate-200'}`}><BookOpen size={14}/> Academics</button>
+              <button onClick={() => setActiveTab('skills')} type="button" className={`flex-1 min-w-[100px] py-2 text-[10px] sm:text-xs font-bold rounded-lg flex items-center justify-center gap-1 sm:gap-2 transition-all ${activeTab === 'skills' ? 'bg-indigo-600 text-white' : 'text-slate-400 hover:text-slate-200'}`}><Code size={14}/> Skills</button>
+              <button onClick={() => setActiveTab('demo')} type="button" className={`flex-1 min-w-[100px] py-2 text-[10px] sm:text-xs font-bold rounded-lg flex items-center justify-center gap-1 sm:gap-2 transition-all ${activeTab === 'demo' ? 'bg-indigo-600 text-white' : 'text-slate-400 hover:text-slate-200'}`}><Users size={14}/> Profile</button>
+              <button onClick={() => setActiveTab('startup')} type="button" className={`flex-1 min-w-[100px] py-2 text-[10px] sm:text-xs font-bold rounded-lg flex items-center justify-center gap-1 sm:gap-2 transition-all ${activeTab === 'startup' ? 'bg-orange-600 text-white' : 'text-slate-400 hover:text-slate-200'}`}><Rocket size={14}/> Startup</button>
             </div>
 
             <form onSubmit={handleManualSubmit} className="space-y-4">
@@ -215,6 +220,25 @@ const Evaluate = ({ user, profile }) => {
                     </select>
                   </div>
                   
+                  <button type="button" onClick={() => setActiveTab('startup')} className="w-full bg-slate-800 hover:bg-slate-700 p-3 rounded-xl font-bold text-sm transition-colors text-indigo-400 mt-2">Next: Startup (Optional) →</button>
+                </div>
+              )}
+
+              {/* STARTUP TAB */}
+              {activeTab === 'startup' && (
+                <div className="space-y-4 animate-in fade-in zoom-in-95 duration-200">
+                  <div className="bg-orange-500/10 border border-orange-500/20 p-4 rounded-xl mb-2">
+                    <p className="text-xs text-orange-200/80 leading-relaxed">Have a startup idea? Enter it below, and our AI will automatically find relevant government grants, seed funds, and subsidies tailored to your project.</p>
+                  </div>
+                  <div>
+                    <label className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 block">Startup/Project Title (Optional)</label>
+                    <input type="text" placeholder="e.g. EdTech for Rural Areas" className="w-full bg-slate-800 border border-slate-700 p-3 rounded-xl outline-none focus:border-orange-500 text-white" value={manualData.startupTitle} onChange={(e) => setManualData({...manualData, startupTitle: e.target.value})} />
+                  </div>
+                  <div>
+                    <label className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 block">Startup Idea / Description</label>
+                    <textarea placeholder="Describe your startup idea, target audience, and technology..." rows="4" className="w-full bg-slate-800 border border-slate-700 p-3 rounded-xl outline-none focus:border-orange-500 text-white resize-none" value={manualData.startupIdea} onChange={(e) => setManualData({...manualData, startupIdea: e.target.value})}></textarea>
+                  </div>
+                  
                   <button className="w-full bg-indigo-600 hover:bg-indigo-500 p-4 rounded-xl font-bold transition-colors shadow-lg shadow-indigo-500/20 mt-6">{loading ? 'Calculating...' : 'Valuate Profile'}</button>
                 </div>
               )}
@@ -250,6 +274,14 @@ const Evaluate = ({ user, profile }) => {
 
               {/* AI Online Recommendations */}
               <h3 className="text-xl font-black text-white pt-4 border-b border-slate-800 pb-2">AI Online Recommendations</h3>
+              
+              {result.ai_recommendations?.startup_subsidies && result.ai_recommendations.startup_subsidies.length > 0 && (
+                <div className="mb-6 bg-orange-950/20 border border-orange-500/20 p-6 rounded-3xl relative overflow-hidden">
+                  <div className="absolute top-0 right-0 w-32 h-32 bg-orange-500/10 rounded-full blur-2xl"></div>
+                  <CategorySection isOnline={true} onOnlineClick={handleOnlineClick} title="Startup Subsidies & Grants" items={result.ai_recommendations.startup_subsidies} icon={<Rocket size={20}/>} colorClass="text-orange-400" />
+                </div>
+              )}
+
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <CategorySection isOnline={true} onOnlineClick={handleOnlineClick} title="Internships" items={result.ai_recommendations?.internships} icon={<Briefcase size={20}/>} colorClass="text-blue-400" />
                 <CategorySection isOnline={true} onOnlineClick={handleOnlineClick} title="Scholarships" items={result.ai_recommendations?.scholarships} icon={<GraduationCap size={20}/>} colorClass="text-green-400" />
