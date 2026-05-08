@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Info, Zap, Target, Search, BrainCircuit, Star, Quote, MessageSquare, HelpCircle, ChevronDown, Send, CheckCircle2 } from 'lucide-react';
+import { Info, Zap, Target, Search, BrainCircuit, Star, Quote, MessageSquare, HelpCircle, ChevronDown, Send, CheckCircle2, AlertTriangle } from 'lucide-react';
+import { supabase } from '../supabaseClient';
 
 const advantages = [
   {
@@ -62,15 +63,45 @@ const About = () => {
   const [rating, setRating] = useState(5);
   const [feedbackSubmitted, setFeedbackSubmitted] = useState(false);
   const [openFaq, setOpenFaq] = useState(null);
+  const [formData, setFormData] = useState({ name: '', department: '', feedback_text: '' });
+  const [submitError, setSubmitError] = useState(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleFeedbackSubmit = (e) => {
+  const handleFeedbackSubmit = async (e) => {
     e.preventDefault();
-    setFeedbackSubmitted(true);
-    setTimeout(() => {
-      setFeedbackSubmitted(false);
+    setIsSubmitting(true);
+    setSubmitError(null);
+
+    try {
+      const { error } = await supabase
+        .from('feedback')
+        .insert([
+          { 
+            name: formData.name, 
+            department: formData.department, 
+            rating: rating, 
+            feedback_text: formData.feedback_text 
+          }
+        ]);
+
+      if (error) {
+        throw error;
+      }
+
+      setFeedbackSubmitted(true);
+      setFormData({ name: '', department: '', feedback_text: '' });
       setRating(5);
-      e.target.reset();
-    }, 4000);
+      
+      setTimeout(() => {
+        setFeedbackSubmitted(false);
+      }, 4000);
+
+    } catch (err) {
+      console.error("Feedback error:", err);
+      setSubmitError(err.message || "Failed to submit feedback. Did you create the feedback table in Supabase?");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -173,21 +204,28 @@ const About = () => {
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <label className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 block">Your Name</label>
-                    <input type="text" required placeholder="John Doe" className="w-full bg-slate-950/50 border border-slate-800 p-4 rounded-xl outline-none focus:border-indigo-500 text-white transition-colors" />
+                    <input type="text" required placeholder="John Doe" className="w-full bg-slate-950/50 border border-slate-800 p-4 rounded-xl outline-none focus:border-indigo-500 text-white transition-colors" value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})} />
                   </div>
                   <div>
                     <label className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 block">Department</label>
-                    <input type="text" placeholder="Computer Science" className="w-full bg-slate-950/50 border border-slate-800 p-4 rounded-xl outline-none focus:border-indigo-500 text-white transition-colors" />
+                    <input type="text" placeholder="Computer Science" className="w-full bg-slate-950/50 border border-slate-800 p-4 rounded-xl outline-none focus:border-indigo-500 text-white transition-colors" value={formData.department} onChange={(e) => setFormData({...formData, department: e.target.value})} />
                   </div>
                 </div>
 
                 <div>
                   <label className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 block">Your Feedback</label>
-                  <textarea required rows="4" placeholder="Tell us what you love, what's broken, or what we should add next..." className="w-full bg-slate-950/50 border border-slate-800 p-4 rounded-xl outline-none focus:border-indigo-500 text-white transition-colors resize-none"></textarea>
+                  <textarea required rows="4" placeholder="Tell us what you love, what's broken, or what we should add next..." className="w-full bg-slate-950/50 border border-slate-800 p-4 rounded-xl outline-none focus:border-indigo-500 text-white transition-colors resize-none" value={formData.feedback_text} onChange={(e) => setFormData({...formData, feedback_text: e.target.value})}></textarea>
                 </div>
 
-                <button type="submit" className="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold p-4 rounded-xl flex items-center justify-center gap-2 transition-colors shadow-lg shadow-indigo-500/20">
-                  <Send size={18} /> Submit Feedback
+                {submitError && (
+                  <div className="flex items-center gap-2 bg-rose-500/10 border border-rose-500/30 text-rose-400 p-3 rounded-xl text-sm">
+                    <AlertTriangle size={16} className="flex-shrink-0" />
+                    <span>{submitError}</span>
+                  </div>
+                )}
+
+                <button type="submit" disabled={isSubmitting} className="w-full bg-indigo-600 hover:bg-indigo-500 disabled:bg-slate-800 disabled:text-slate-500 text-white font-bold p-4 rounded-xl flex items-center justify-center gap-2 transition-colors shadow-lg shadow-indigo-500/20">
+                  <Send size={18} /> {isSubmitting ? 'Sending...' : 'Submit Feedback'}
                 </button>
               </form>
             )}

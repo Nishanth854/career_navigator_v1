@@ -1,20 +1,26 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../supabaseClient';
-import { ShieldCheck, UserCheck, XCircle, Search, FileText, AlertTriangle, Eye } from 'lucide-react';
+import { ShieldCheck, UserCheck, XCircle, Search, FileText, AlertTriangle, Eye, MessageSquare, Star, Users } from 'lucide-react';
 
 // Hardcode your admin email here
 export const ADMIN_EMAIL = 'vnishanth854@gmail.com';
 
 const Admin = ({ user }) => {
   const [users, setUsers] = useState([]);
+  const [feedbacks, setFeedbacks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [fetchError, setFetchError] = useState(null);
   const [selectedUser, setSelectedUser] = useState(null);
+  const [activeTab, setActiveTab] = useState('students');
 
   useEffect(() => {
-    fetchUsers();
-  }, []);
+    if (activeTab === 'students') {
+      fetchUsers();
+    } else {
+      fetchFeedbacks();
+    }
+  }, [activeTab]);
 
   const fetchUsers = async () => {
     setLoading(true);
@@ -29,6 +35,23 @@ const Admin = ({ user }) => {
       setFetchError(error.message);
     } else {
       setUsers(data || []);
+    }
+    setLoading(false);
+  };
+
+  const fetchFeedbacks = async () => {
+    setLoading(true);
+    setFetchError(null);
+    const { data, error } = await supabase
+      .from('feedback')
+      .select('*')
+      .order('created_at', { ascending: false });
+    
+    if (error) {
+      console.error("Error fetching feedback:", error);
+      setFetchError(error.message);
+    } else {
+      setFeedbacks(data || []);
     }
     setLoading(false);
   };
@@ -91,6 +114,16 @@ const Admin = ({ user }) => {
         </div>
       </div>
 
+      {/* Tabs */}
+      <div className="flex bg-slate-900/50 p-1 rounded-xl mb-6 w-fit border border-slate-800">
+        <button onClick={() => setActiveTab('students')} className={`py-2 px-6 text-sm font-bold rounded-lg flex items-center justify-center gap-2 transition-all ${activeTab === 'students' ? 'bg-indigo-600 text-white shadow-lg' : 'text-slate-400 hover:text-slate-200'}`}>
+          <Users size={16}/> Students
+        </button>
+        <button onClick={() => setActiveTab('feedback')} className={`py-2 px-6 text-sm font-bold rounded-lg flex items-center justify-center gap-2 transition-all ${activeTab === 'feedback' ? 'bg-indigo-600 text-white shadow-lg' : 'text-slate-400 hover:text-slate-200'}`}>
+          <MessageSquare size={16}/> Feedback
+        </button>
+      </div>
+
       {loading ? (
         <div className="text-center py-20 text-slate-400">Loading user database...</div>
       ) : fetchError ? (
@@ -99,7 +132,7 @@ const Admin = ({ user }) => {
           <h2 className="text-xl font-bold text-white mb-2">Database Error</h2>
           <p className="text-rose-400 max-w-lg mx-auto">{fetchError}</p>
         </div>
-      ) : (
+      ) : activeTab === 'students' ? (
         <div className="bg-white/[0.02] border border-white/10 rounded-3xl overflow-hidden backdrop-blur-xl">
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
@@ -169,6 +202,40 @@ const Admin = ({ user }) => {
               </tbody>
             </table>
           </div>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {feedbacks.map(f => (
+            <div key={f.id} className="bg-slate-900/60 border border-slate-800 p-6 rounded-[2rem] hover:border-indigo-500/30 transition-colors shadow-lg">
+              <div className="flex justify-between items-start mb-4">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-full bg-indigo-500/20 flex items-center justify-center text-indigo-300 font-bold">
+                    {f.name?.charAt(0).toUpperCase() || '?'}
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-white text-sm">{f.name || 'Anonymous'}</h4>
+                    <p className="text-[10px] text-slate-500 uppercase tracking-widest">{f.department || 'Unknown Dept'}</p>
+                  </div>
+                </div>
+                <div className="flex gap-1">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} size={12} className={i < f.rating ? 'text-yellow-400 fill-yellow-400' : 'text-slate-700 fill-slate-800'} />
+                  ))}
+                </div>
+              </div>
+              <p className="text-slate-300 text-sm leading-relaxed mb-4">"{f.feedback_text}"</p>
+              <div className="text-[10px] text-slate-600 font-medium border-t border-slate-800/50 pt-4">
+                {new Date(f.created_at).toLocaleString()}
+              </div>
+            </div>
+          ))}
+          {feedbacks.length === 0 && (
+            <div className="col-span-full py-16 text-center text-slate-500 bg-white/[0.02] border border-white/10 rounded-3xl backdrop-blur-xl">
+              <MessageSquare size={48} className="mx-auto mb-4 opacity-20" />
+              <p className="font-medium text-lg">No feedback received yet.</p>
+              <p className="text-sm mt-2">When students submit feedback, it will appear here.</p>
+            </div>
+          )}
         </div>
       )}
 
