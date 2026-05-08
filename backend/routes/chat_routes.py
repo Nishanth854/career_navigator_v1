@@ -30,7 +30,7 @@ async def chat_support(query: dict):
     
     if model:
         try:
-            prompt = f"You are CareerNav AI, an advanced career counselor. The user is a student named {name} studying {dept} with a market valuation score of {score}. Respond to their query concisely and professionally in less than 3 sentences. User Query: {user_msg}"
+            prompt = f"You are StudentMate AI, an advanced career counselor. The user is a student named {name} studying {dept} with a market valuation score of {score}. Respond to their query concisely and professionally in less than 3 sentences. User Query: {user_msg}"
             response = model.generate_content(prompt)
             return {"response": response.text}
         except Exception as e:

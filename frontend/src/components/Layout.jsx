@@ -33,10 +33,8 @@ const Layout = ({ user, profile }) => {
       <nav className="fixed top-6 left-1/2 -translate-x-1/2 z-50 w-[95%] max-w-6xl bg-white/[0.03] backdrop-blur-3xl border border-white/10 rounded-full h-16 flex items-center justify-between px-6 shadow-[0_10px_40px_rgba(0,0,0,0.5)]">
         <div className="flex items-center gap-6">
           <div className="flex items-center gap-2 group cursor-pointer">
-              <div className="w-10 h-10 bg-indigo-500/20 rounded-full flex items-center justify-center border border-indigo-500/50 group-hover:shadow-[0_0_20px_rgba(99,102,241,0.5)] transition-all">
-                <GraduationCap className="text-indigo-400 w-6 h-6" />
-              </div>
-              <span className="text-xl font-black text-white hidden sm:block tracking-tight">CareerNav AI</span>
+              <img src="/logo.png" alt="StudentMate Logo" className="w-10 h-10 rounded-xl object-contain border border-indigo-500/50 group-hover:shadow-[0_0_20px_rgba(99,102,241,0.5)] transition-all bg-white p-1" />
+              <span className="text-xl font-black text-white hidden sm:block tracking-tight">StudentMate</span>
           </div>
           <div className="hidden md:flex items-center gap-2 ml-4">
             <NavLink to="/" className={({isActive}) => `px-4 py-2 rounded-full text-sm font-bold flex items-center gap-2 transition-all ${isActive ? 'bg-indigo-600 text-white shadow-[0_0_20px_rgba(99,102,241,0.4)]' : 'text-slate-400 hover:text-white hover:bg-white/5'}`}><LayoutDashboard size={16}/> Home</NavLink>

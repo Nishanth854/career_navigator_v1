@@ -8,7 +8,7 @@ load_dotenv(override=True)
 sender = os.getenv("SENDER_EMAIL")
 password = os.getenv("GMAIL_APP_PASSWORD")
 
-print("=== CareerNav SMTP Diagnostic Tool ===")
+print("=== StudentMate SMTP Diagnostic Tool ===")
 print(f"Checking credentials loaded from .env:")
 print(f"Email: '{sender}'")
 print(f"Password Length: {len(password) if password else 0} characters")

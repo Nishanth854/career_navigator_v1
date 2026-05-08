@@ -1,5 +1,5 @@
 ---
-title: Career Navigator AI
+title: StudentMate
 emoji: 🎓
 colorFrom: blue
 colorTo: purple
@@ -7,5 +7,5 @@ sdk: docker
 app_port: 7860
 ---
 
-# Career Navigator V1
-Career Navigator AI - Final Year Project
+# StudentMate V1
+StudentMate - Final Year Project

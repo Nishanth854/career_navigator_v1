@@ -58,7 +58,7 @@ const AuthPage = () => {
       <div className="absolute bottom-0 right-0 w-[600px] h-[600px] bg-purple-600/10 rounded-full blur-[150px] pointer-events-none translate-x-1/3 translate-y-1/3"></div>
 
       <div className="w-full max-w-md bg-white/[0.02] backdrop-blur-3xl border border-white/10 p-10 rounded-[2.5rem] shadow-[0_0_50px_rgba(79,70,229,0.15)] relative z-10">
-        <h2 className="text-3xl font-black text-white mb-8 text-center tracking-tight">{isRegistering ? 'Join CareerNav' : 'Welcome Back'}</h2>
+        <h2 className="text-3xl font-black text-white mb-8 text-center tracking-tight">{isRegistering ? 'Join StudentMate' : 'Welcome Back'}</h2>
         <form onSubmit={handleAuth} className="space-y-4">
           {!showOtp ? (
             <>

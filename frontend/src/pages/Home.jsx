@@ -55,7 +55,7 @@ const Home = () => {
       <div className="bg-gradient-to-r from-indigo-600/20 to-purple-600/20 border border-indigo-500/30 p-8 md:p-12 rounded-[2rem] relative overflow-hidden shadow-2xl shadow-indigo-500/10">
         <div className="absolute -right-20 -top-20 w-64 h-64 bg-indigo-500/20 blur-3xl rounded-full pointer-events-none"></div>
         <div className="relative z-10">
-          <span className="bg-indigo-500/20 text-indigo-300 text-xs font-black uppercase tracking-widest px-3 py-1 rounded-lg mb-4 inline-block">Career Navigation Hub</span>
+          <span className="bg-indigo-500/20 text-indigo-300 text-xs font-black uppercase tracking-widest px-3 py-1 rounded-lg mb-4 inline-block">StudentMate Hub</span>
           <h1 className="text-4xl md:text-5xl font-black text-white mb-4 leading-tight">Master Your <br/>Career Trajectory.</h1>
           <p className="text-slate-300 max-w-xl text-lg">Follow the ultimate 4-phase navigation roadmap below to build an unbeatable profile before graduation.</p>
         </div>

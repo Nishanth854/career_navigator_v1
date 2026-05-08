@@ -31,3 +31,5 @@ Thumbs.db
 
 # Scripts
 auto_push.ps1
+set_hf_secrets.py
+test_gemini_connection.py

@@ -81,7 +81,7 @@ const About = () => {
         <div className="inline-flex bg-indigo-500/10 p-4 rounded-full border border-indigo-500/20 mb-2 shadow-[0_0_30px_rgba(99,102,241,0.2)]">
           <Info size={40} className="text-indigo-400" />
         </div>
-        <h1 className="text-4xl md:text-5xl font-black text-white">About CareerNav AI</h1>
+        <h1 className="text-4xl md:text-5xl font-black text-white">About StudentMate</h1>
         <p className="text-slate-400 text-lg leading-relaxed max-w-2xl mx-auto">
           An advanced, AI-driven platform engineered to bridge the gap between academic learning and industry readiness.
         </p>
@@ -147,7 +147,7 @@ const About = () => {
         <div className="max-w-2xl mx-auto animate-in fade-in slide-in-from-bottom-4 duration-300">
           <div className="bg-slate-900/60 border border-slate-800 p-8 md:p-12 rounded-[2.5rem] shadow-2xl">
             <h2 className="text-2xl font-black text-white mb-2">We value your input!</h2>
-            <p className="text-slate-400 text-sm mb-8">Help us improve the CareerNav platform by sharing your experience, bugs you found, or feature requests.</p>
+            <p className="text-slate-400 text-sm mb-8">Help us improve the StudentMate platform by sharing your experience, bugs you found, or feature requests.</p>
             
             {feedbackSubmitted ? (
               <div className="bg-green-500/10 border border-green-500/30 p-8 rounded-3xl text-center space-y-4 animate-in zoom-in-95">

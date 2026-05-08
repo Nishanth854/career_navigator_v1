@@ -5,7 +5,7 @@ const API_BASE = "/api/v1";
 
 const Chatbot = ({ profile, onClose }) => {
   const [messages, setMessages] = useState([
-    { sender: 'ai', text: `Hi ${profile?.full_name?.split(' ')[0] || 'there'}! I'm CareerNav AI. Ask me anything about your roadmap, valuation score, or general career advice!` }
+    { sender: 'ai', text: `Hi ${profile?.full_name?.split(' ')[0] || 'there'}! I'm StudentMate AI. Ask me anything about your roadmap, valuation score, or general career advice!` }
   ]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -57,7 +57,7 @@ const Chatbot = ({ profile, onClose }) => {
       <div className="bg-indigo-600 p-4 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <Bot size={20} className="text-indigo-200" />
-          <h3 className="font-bold text-white text-sm">CareerNav Assistant</h3>
+          <h3 className="font-bold text-white text-sm">StudentMate Assistant</h3>
         </div>
         <button onClick={onClose} className="text-indigo-200 hover:text-white transition-colors">
           <X size={20} />

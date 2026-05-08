@@ -78,7 +78,7 @@ const ProfileCompletion = ({ user, onComplete }) => {
 
         <div className="relative z-10">
           <h2 className="text-3xl font-black text-white mb-2">Complete Your Profile</h2>
-          <p className="text-slate-400 text-sm mb-8">We need a few details and documents to personalize your CareerNav experience.</p>
+          <p className="text-slate-400 text-sm mb-8">We need a few details and documents to personalize your StudentMate experience.</p>
 
           {error && <div className="bg-red-500/10 border border-red-500/50 text-red-400 p-4 rounded-xl text-sm mb-6">{error}</div>}
 

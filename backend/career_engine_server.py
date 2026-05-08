@@ -13,7 +13,7 @@ import sys
 
 sys.stdout.reconfigure(encoding='utf-8')
 
-app = FastAPI(title="Student Career Navigator AI")
+app = FastAPI(title="StudentMate")
 
 # CORS setup
 app.add_middleware(
@@ -60,5 +60,5 @@ if os.path.exists("./static"):
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 7860))
-    print(f"🚀 Launching Career Navigator AI Engine on port {port}...")
+    print(f"🚀 Launching StudentMate Engine on port {port}...")
     uvicorn.run(app, host="0.0.0.0", port=port)

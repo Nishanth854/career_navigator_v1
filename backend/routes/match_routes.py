@@ -113,7 +113,7 @@ async def manual_valuation(data: dict):
             genai.configure(api_key=GEMINI_API_KEY)
             model = genai.GenerativeModel('gemini-flash-latest')
             prompt = f"""
-            You are CareerNav AI. Analyze this student:
+            You are StudentMate AI. Analyze this student:
             Name: {name}, Dept: {department}, Skills: {', '.join(skills)}, Certifications: {', '.join(certifications)}, GPA: {gpa}, Arrears: {arrears}.
             Community: {community}, Annual Family Income: {family_income}.
             Return ONLY a valid JSON object (no markdown, no backticks, strictly parseable JSON) with this structure:

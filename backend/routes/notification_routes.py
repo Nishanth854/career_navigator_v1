@@ -21,7 +21,7 @@ async def send_alert(data: dict):
     
     email = data.get("email")
     phone = data.get("phone")
-    message = data.get("message", "A new scheme matching your profile has been found by CareerNav AI!")
+    message = data.get("message", "A new scheme matching your profile has been found by StudentMate AI!")
     
     responses = []
     
@@ -36,13 +36,13 @@ async def send_alert(data: dict):
                 msg = MIMEMultipart()
                 msg['From'] = sender
                 msg['To'] = email
-                msg['Subject'] = "CareerNav AI Alert: New Opportunity!"
+                msg['Subject'] = "StudentMate AI Alert: New Opportunity!"
                 
                 html = f"""
                 <html>
                   <body style="font-family: Arial; background-color: #f4f4f4; padding: 20px;">
                     <div style="background-color: white; padding: 20px; border-radius: 10px;">
-                        <h2 style="color: #4f46e5;">CareerNav AI</h2>
+                        <h2 style="color: #4f46e5;">StudentMate AI</h2>
                         <p><strong>Alert!</strong></p>
                         <p>{message}</p>
                         <a href="http://localhost:5173/updates" style="background-color: #4f46e5; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">View Scheme</a>
@@ -76,7 +76,7 @@ async def send_alert(data: dict):
                 if account_sid and auth_token and twilio_number:
                     client = Client(account_sid, auth_token)
                     client.messages.create(
-                        body=f"CareerNav AI Alert: {message}",
+                        body=f"StudentMate AI Alert: {message}",
                         from_=twilio_number,
                         to=phone
                     )

@@ -17,7 +17,7 @@ else:
     model = None
 
 if __name__ == "__main__":
-    print("🚀 Career Navigator AI is starting...")
+    print("🚀 StudentMate is starting...")
     uvicorn.run(app, host="0.0.0.0", port=8001)
 
 @app.post("/api/v1/chat-support")
@@ -31,7 +31,7 @@ async def chat_support(query: dict):
     
     if model:
         try:
-            prompt = f"You are CareerNav AI, an advanced career counselor. The user is a student named {name} studying {dept} with a market valuation score of {score}. Respond to their query concisely and professionally in less than 3 sentences. User Query: {user_msg}"
+            prompt = f"You are StudentMate AI, an advanced career counselor. The user is a student named {name} studying {dept} with a market valuation score of {score}. Respond to their query concisely and professionally in less than 3 sentences. User Query: {user_msg}"
             response = model.generate_content(prompt)
             return {"response": response.text}
         except Exception as e:
