@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { NavLink, Outlet } from 'react-router-dom';
-import { GraduationCap, LogOut, LayoutDashboard, Target, Bell, Info, User, MessageCircle, Menu, X, ShieldCheck, UserCheck } from 'lucide-react';
+import { GraduationCap, LogOut, LayoutDashboard, Target, Bell, Info, User, MessageCircle, Menu, X, ShieldCheck, UserCheck, Rocket } from 'lucide-react';
 import { supabase } from '../supabaseClient';
 import Chatbot from './Chatbot';
 import { ADMIN_EMAIL } from '../pages/Admin';
@@ -40,6 +40,7 @@ const Layout = ({ user, profile }) => {
           <div className="hidden md:flex items-center gap-2 ml-4">
             <NavLink to="/" className={({isActive}) => `px-4 py-2 rounded-full text-sm font-bold flex items-center gap-2 transition-all ${isActive ? 'bg-indigo-600 text-white shadow-[0_0_20px_rgba(99,102,241,0.4)]' : 'text-slate-400 hover:text-white hover:bg-white/5'}`}><LayoutDashboard size={16}/> Home</NavLink>
             <NavLink to="/evaluate" className={({isActive}) => `px-4 py-2 rounded-full text-sm font-bold flex items-center gap-2 transition-all ${isActive ? 'bg-indigo-600 text-white shadow-[0_0_20px_rgba(99,102,241,0.4)]' : 'text-slate-400 hover:text-white hover:bg-white/5'}`}><Target size={16}/> Evaluate</NavLink>
+            <NavLink to="/startup" className={({isActive}) => `px-4 py-2 rounded-full text-sm font-bold flex items-center gap-2 transition-all ${isActive ? 'bg-orange-600 text-white shadow-[0_0_20px_rgba(249,115,22,0.4)]' : 'text-slate-400 hover:text-white hover:bg-white/5'}`}><Rocket size={16}/> Startup</NavLink>
             <NavLink to="/updates" className={({isActive}) => `px-4 py-2 rounded-full text-sm font-bold flex items-center gap-2 transition-all ${isActive ? 'bg-indigo-600 text-white shadow-[0_0_20px_rgba(99,102,241,0.4)]' : 'text-slate-400 hover:text-white hover:bg-white/5'}`}><Bell size={16}/> Updates</NavLink>
             <NavLink to="/about" className={({isActive}) => `px-4 py-2 rounded-full text-sm font-bold flex items-center gap-2 transition-all ${isActive ? 'bg-indigo-600 text-white shadow-[0_0_20px_rgba(99,102,241,0.4)]' : 'text-slate-400 hover:text-white hover:bg-white/5'}`}><Info size={16}/> About</NavLink>
           </div>
@@ -89,6 +90,7 @@ const Layout = ({ user, profile }) => {
         <div className="md:hidden fixed top-24 left-1/2 -translate-x-1/2 w-[95%] bg-black/80 backdrop-blur-3xl border border-white/10 rounded-3xl p-4 shadow-[0_10px_40px_rgba(0,0,0,0.8)] z-40 flex flex-col gap-2">
             <NavLink to="/" onClick={() => setShowMobileMenu(false)} className={({isActive}) => `p-3 rounded-xl text-sm font-bold flex items-center gap-3 transition-all ${isActive ? 'bg-indigo-600 text-white shadow-[0_0_20px_rgba(99,102,241,0.4)]' : 'text-slate-400 hover:text-white hover:bg-white/5'}`}><LayoutDashboard size={18}/> Home</NavLink>
             <NavLink to="/evaluate" onClick={() => setShowMobileMenu(false)} className={({isActive}) => `p-3 rounded-xl text-sm font-bold flex items-center gap-3 transition-all ${isActive ? 'bg-indigo-600 text-white shadow-[0_0_20px_rgba(99,102,241,0.4)]' : 'text-slate-400 hover:text-white hover:bg-white/5'}`}><Target size={18}/> Evaluate</NavLink>
+            <NavLink to="/startup" onClick={() => setShowMobileMenu(false)} className={({isActive}) => `p-3 rounded-xl text-sm font-bold flex items-center gap-3 transition-all ${isActive ? 'bg-orange-600 text-white shadow-[0_0_20px_rgba(249,115,22,0.4)]' : 'text-slate-400 hover:text-white hover:bg-white/5'}`}><Rocket size={18}/> Startup</NavLink>
             <NavLink to="/updates" onClick={() => setShowMobileMenu(false)} className={({isActive}) => `p-3 rounded-xl text-sm font-bold flex items-center gap-3 transition-all ${isActive ? 'bg-indigo-600 text-white shadow-[0_0_20px_rgba(99,102,241,0.4)]' : 'text-slate-400 hover:text-white hover:bg-white/5'}`}><Bell size={18}/> Updates</NavLink>
             <NavLink to="/about" onClick={() => setShowMobileMenu(false)} className={({isActive}) => `p-3 rounded-xl text-sm font-bold flex items-center gap-3 transition-all ${isActive ? 'bg-indigo-600 text-white shadow-[0_0_20px_rgba(99,102,241,0.4)]' : 'text-slate-400 hover:text-white hover:bg-white/5'}`}><Info size={18}/> About</NavLink>
         </div>

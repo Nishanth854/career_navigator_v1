@@ -5,6 +5,7 @@ import ProfileCompletion from './components/ProfileCompletion';
 import Layout from './components/Layout';
 import Home from './pages/Home';
 import Evaluate from './pages/Evaluate';
+import Startup from './pages/Startup';
 import Updates from './pages/Updates';
 import About from './pages/About';
 import Account from './pages/Account';
@@ -102,6 +103,7 @@ const App = () => {
         <Route path="/" element={<Layout user={user} profile={profile} />}>
           <Route index element={<Home />} />
           <Route path="evaluate" element={<Evaluate user={user} profile={profile} />} />
+          <Route path="startup" element={<Startup />} />
           <Route path="account" element={<Account user={user} profile={profile} />} />
           <Route path="admin" element={<Admin user={user} />} />
           <Route path="updates" element={<Updates />} />
