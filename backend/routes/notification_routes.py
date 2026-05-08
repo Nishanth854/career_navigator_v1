@@ -52,7 +52,7 @@ async def send_alert(data: dict):
                 """
                 msg.attach(MIMEText(html, 'html'))
                 
-                server = smtplib.SMTP('smtp.gmail.com', 587)
+                server = smtplib.SMTP('smtp.gmail.com', 587, timeout=3)
                 server.starttls()
                 server.login(sender, password)
                 server.send_message(msg)
