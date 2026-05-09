@@ -13,30 +13,52 @@ const CategorySection = ({ title, items, icon, colorClass, isOnline, onOnlineCli
       {items && items.length > 0 ? items.map((item, i) => {
         if (isOnline) {
           return (
-            <button key={i} type="button" onClick={() => onOnlineClick(item, title)} className="text-left w-full block bg-slate-900/40 border border-slate-800 p-5 rounded-2xl group transition-all hover:border-indigo-500/50">
-              <div className="flex justify-between items-start">
-                <div className="space-y-1 pr-2">
-                  <h4 className="font-bold text-white group-hover:text-indigo-400 leading-snug">{item.title}</h4>
-                  <p className="text-xs text-slate-400 line-clamp-2">{item.description}</p>
-                </div>
-                <span className="text-[9px] font-black uppercase text-pink-400 bg-pink-500/10 px-2 py-1 rounded flex-shrink-0 flex items-center gap-1">
-                  <Target size={10}/> Analyze
-                </span>
+            <div key={i} className="text-left w-full block bg-slate-900/40 border border-slate-800 p-5 rounded-2xl group transition-all hover:border-indigo-500/50 flex flex-col h-full">
+              <div className="flex-1 space-y-1 pr-2 mb-4">
+                <h4 className="font-bold text-white group-hover:text-indigo-400 leading-snug">{item.title}</h4>
+                <p className="text-xs text-slate-400 line-clamp-2">{item.description}</p>
               </div>
-            </button>
+              <div className="flex gap-2">
+                <button 
+                  type="button"
+                  onClick={() => onOnlineClick(item, title)} 
+                  className="flex-1 text-[10px] font-black uppercase text-indigo-400 bg-indigo-500/10 hover:bg-indigo-500/20 px-3 py-2 rounded-xl flex items-center justify-center gap-1.5 transition-all border border-indigo-500/20"
+                >
+                  <Target size={12}/> Analyze
+                </button>
+                <a 
+                  href={item.url} 
+                  target="_blank" 
+                  rel="noreferrer" 
+                  className="flex-1 text-[10px] font-black uppercase text-pink-400 bg-pink-500/10 hover:bg-pink-500/20 px-3 py-2 rounded-xl flex items-center justify-center gap-1.5 transition-all border border-pink-500/20"
+                >
+                  Apply <ArrowRight size={12}/>
+                </a>
+              </div>
+            </div>
           );
         }
         return (
-          <div key={i} className="block bg-slate-900/40 border border-slate-800 p-5 rounded-2xl group transition-all hover:border-indigo-500/50">
-            <div className="flex justify-between items-start">
-              <div className="space-y-1 pr-2">
+          <div key={i} className="block bg-slate-900/40 border border-slate-800 p-5 rounded-2xl group transition-all hover:border-indigo-500/50 flex flex-col h-full">
+            <div className="flex-1 space-y-1 pr-2 mb-4">
+              <div className="flex justify-between items-start mb-1">
                 <h4 className="font-bold text-white group-hover:text-indigo-400 leading-snug">{item.title}</h4>
-                <p className="text-xs text-slate-400 line-clamp-2">{item.company} • {item.location}</p>
+                <span className="text-[9px] font-black uppercase text-indigo-400 bg-indigo-500/10 px-2 py-1 rounded flex-shrink-0">
+                  {item.type}
+                </span>
               </div>
-              <span className="text-[9px] font-black uppercase text-indigo-400 bg-indigo-500/10 px-2 py-1 rounded flex-shrink-0">
-                {item.type}
-              </span>
+              <p className="text-xs text-slate-400 line-clamp-2">{item.company} • {item.location}</p>
             </div>
+            {item.url && (
+              <a 
+                href={item.url} 
+                target="_blank" 
+                rel="noreferrer" 
+                className="w-full text-[10px] font-black uppercase text-indigo-400 bg-indigo-500/10 hover:bg-indigo-500/20 px-3 py-2 rounded-xl flex items-center justify-center gap-1.5 transition-all border border-indigo-500/20"
+              >
+                Apply Now <ArrowRight size={12}/>
+              </a>
+            )}
           </div>
         );
       }) : <div className="p-8 border border-dashed border-slate-800 rounded-2xl text-center text-slate-600 text-xs">No matches found.</div>}

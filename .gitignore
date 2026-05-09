@@ -33,3 +33,8 @@ Thumbs.db
 auto_push.ps1
 set_hf_secrets.py
 test_gemini_connection.py
+
+# Database
+lancedb_data/
+backend/lancedb_data/
+*.lance

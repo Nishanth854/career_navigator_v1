@@ -1,6 +1,12 @@
+import os
+import json
+import google.generativeai as genai
 from fastapi import APIRouter, HTTPException
 import lancedb
 import pandas as pd
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # Initialize the router
 router = APIRouter()
@@ -30,16 +36,17 @@ async def find_matches(student_data: dict):
         # .search() automatically handles the vectorization of the query
         results = table.search(query_text).limit(5).to_list()
 
-        # Format the output for the Frontend
         formatted_results = []
         for res in results:
             formatted_results.append({
-                "id": res.get("ID"),
-                "title": res.get("Title"),
-                "type": res.get("Type"),
-                "provider": res.get("Provider"),
-                "skills": res.get("Required_Skills"),
-                "match_score": round(res.get("_distance", 0), 2) # Distance shows how close the match is
+                "id": res.get("id") or res.get("ID") or "",
+                "title": res.get("title") or res.get("Title") or "Unknown",
+                "type": res.get("type") or res.get("Type") or "Opportunity",
+                "company": res.get("company") or res.get("Provider") or "Unknown",
+                "location": res.get("location") or "Remote",
+                "description": res.get("description") or res.get("Required_Skills") or "",
+                "url": res.get("url") or "#",
+                "match_score": round(res.get("_distance", 0), 2)
             })
 
         return {"matches": formatted_results}
@@ -96,17 +103,10 @@ async def manual_valuation(data: dict):
     query_text = f"{department} {' '.join(skills)} {' '.join(certifications)}"
     matches = search_opportunities(query_text)
     
-    # --- AI DYNAMIC RECOMMENDATIONS ---
-    import os
-    import json
-    import google.generativeai as genai
-    from dotenv import load_dotenv
-
-    load_dotenv()
-    GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
-    
     ai_recommendations = {"internships": [], "scholarships": [], "events": []}
     ai_strategy = "Connect your Gemini API key in the backend .env to unlock your AI Career Strategy!"
+    
+    GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
     
     if GEMINI_API_KEY:
         try:
@@ -119,11 +119,11 @@ async def manual_valuation(data: dict):
             Return ONLY a valid JSON object (no markdown, no backticks, strictly parseable JSON) with this structure:
             {{
                 "strategy": "A powerful 2-sentence personalized career strategy emphasizing their strengths.",
-                "internships": [{{"title": "Role at Company", "url": "https://example.com/apply", "description": "Short explanation"}}],
-                "scholarships": [{{"title": "Scholarship Name", "url": "https://example.com", "description": "Short explanation"}}],
-                "events": [{{"title": "Hackathon/Event", "url": "https://example.com", "description": "Short explanation"}}]
+                "internships": [{{"title": "Direct Role at Company", "url": "https://company.com/careers/direct-apply-link", "description": "Short explanation"}}],
+                "scholarships": [{{"title": "Specific Scholarship Name", "url": "https://provider.org/scholarship/apply-form", "description": "Short explanation"}}],
+                "events": [{{"title": "Specific Hackathon", "url": "https://platform.com/event/register", "description": "Short explanation"}}]
             }}
-            Provide exactly 2 highly relevant real-world online internships, 2 scholarships, and 2 hackathons/events with plausible real-world URLs.
+            Provide exactly 2 highly relevant real-world online internships, 2 scholarships, and 2 hackathons/events. CRITICAL: Use the MOST DIRECT application or registration URL available, not just the homepage.
             """
             response = model.generate_content(prompt)
             raw_text = response.text.strip()
@@ -162,12 +162,6 @@ async def analyze_scheme(data: dict):
     url = data.get("url", "#")
     type_str = data.get("type", "opportunity")
     
-    import os
-    import json
-    import google.generativeai as genai
-    from dotenv import load_dotenv
-
-    load_dotenv()
     GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
     
     if not GEMINI_API_KEY:
@@ -220,12 +214,6 @@ async def startup_valuation(data: dict):
     if not startup_idea:
         raise HTTPException(status_code=400, detail="Startup idea is required.")
 
-    import os
-    import json
-    import google.generativeai as genai
-    from dotenv import load_dotenv
-
-    load_dotenv()
     GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
     
     ai_strategy = "Connect your Gemini API key to unlock your AI Startup Strategy!"
@@ -244,10 +232,10 @@ async def startup_valuation(data: dict):
             {{
                 "strategy": "A powerful 2-3 sentence market validation and strategy for launching this startup.",
                 "target_audience": "Who they should sell this to in 1 short sentence.",
-                "subsidies": [{{"title": "Subsidy/Grant Name", "url": "https://example.com", "description": "Short explanation"}}],
-                "incubators": [{{"title": "Incubator/Accelerator Program", "url": "https://example.com", "description": "Short explanation"}}]
+                "subsidies": [{{"title": "Direct Grant Name", "url": "https://government.gov.in/grants/apply", "description": "Short explanation"}}],
+                "incubators": [{{"title": "Specific Incubator", "url": "https://incubator.com/program/apply", "description": "Short explanation"}}]
             }}
-            Provide exactly 3 highly relevant real-world government grants/subsidies (e.g. MSME, Startup India, specific industry grants) and 2 relevant incubator programs with plausible real-world URLs.
+            Provide exactly 3 highly relevant real-world government grants/subsidies and 2 relevant incubator programs. CRITICAL: Use the MOST DIRECT application or registration URL available, not just the homepage.
             """
             response = model.generate_content(prompt)
             raw_text = response.text.strip()

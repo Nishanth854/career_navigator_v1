@@ -45,7 +45,11 @@ const Account = ({ profile, user }) => {
         })
       });
       const data = await res.json();
-      alert(data.logs.join('\n'));
+      if (data.logs && Array.isArray(data.logs)) {
+        alert(data.logs.join('\n'));
+      } else {
+        alert(data.message || "Alert dispatched successfully.");
+      }
     } catch (e) {
       alert("Failed to send alert.");
     } finally {

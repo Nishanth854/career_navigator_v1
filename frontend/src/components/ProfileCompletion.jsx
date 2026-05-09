@@ -5,7 +5,7 @@ import { User, Calendar, Building2, BookOpen, Upload, FileText, ArrowRight } fro
 
 const ProfileCompletion = ({ user, onComplete }) => {
   const [formData, setFormData] = useState({
-    full_name: user?.user_metadata?.username || '',
+    full_name: user?.user_metadata?.full_name || user?.user_metadata?.username || '',
     dob: '',
     college: '',
     department: ''

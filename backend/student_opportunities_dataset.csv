@@ -1,12 +1,13 @@
-title,company,location,type,category,description
-Python Developer Intern,Google,Bangalore,Internship,Develop scalable backend services using Python and FastAPI.
-Frontend React Trainee,Meta,Remote,Internship,Build beautiful user interfaces using React and Tailwind CSS.
-Data Science Scholar,Microsoft,Hyderabad,Scholarship,Excellence in machine learning and data analysis.
-Java Backend Engineer,Amazon,Chennai,Full-time,Core Java development for cloud infrastructure.
-Cybersecurity Hackathon,IBM,Delhi,Event,Compete in national level security challenges.
-AI Research Assistant,OpenAI,Remote,Internship,Researching Large Language Models and Transformers.
-Python Developer,Google,Bangalore,Internship,internship,Backend dev role...
-AI Hackathon,IIT Madras,Chennai,Event,event,National level competition...
-Post-Matric Grant,Govt of India,Delhi,Government,scholarship,Financial aid for students...
-Merit Scholarship,Reliance,Remote,Private,scholarship,Private funding for toppers...
-
+title,company,location,type,category,description,url
+Python Developer Intern,Google,Bangalore,Internship,internship,Develop scalable backend services using Python and FastAPI.,https://www.google.com/about/careers/applications/
+Frontend React Trainee,Meta,Remote,Internship,internship,Build beautiful user interfaces using React and Tailwind CSS.,https://www.metacareers.com/
+Data Science Scholar,Microsoft,Hyderabad,Scholarship,scholarship,Excellence in machine learning and data analysis.,https://careers.microsoft.com/
+Java Backend Engineer,Amazon,Chennai,Internship,internship,Core Java development for cloud infrastructure.,https://www.amazon.jobs/
+Cybersecurity Hackathon,IBM,Delhi,Event,event,Compete in national level security challenges.,https://www.ibm.com/training/events
+AI Research Assistant,OpenAI,Remote,Internship,internship,Researching Large Language Models and Transformers.,https://openai.com/careers
+Post-Matric Grant,Govt of India,Delhi,Scholarship,scholarship,Financial aid for students...,https://scholarships.gov.in/
+Merit Scholarship,Reliance,Remote,Scholarship,scholarship,Private funding for toppers...,https://www.reliancefoundation.org/scholarships
+Smart India Hackathon,Govt of India,India,Event,event,National level innovation competition.,https://www.sih.gov.in/
+TATA Scholarship,TATA Trust,India,Scholarship,scholarship,Support for higher education.,https://www.tatatrusts.org/our-work/education/scholarships-and-grants
+Google Summer of Code,Google,Remote,Event,event,Global program focused on bringing more student developers into open source software development.,https://summerofcode.withgoogle.com/
+ISRO Internship,ISRO,India,Internship,internship,Research and development in space technology.,https://www.isro.gov.in/Internship.html
