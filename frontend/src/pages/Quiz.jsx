@@ -48,13 +48,23 @@ const Quiz = ({ user, profile }) => {
   const fetchQuestions = async () => {
     try {
       const resp = await fetch(`/api/v1/quiz/questions?dept=${profile?.department || 'Computer Science'}`);
-
       const data = await resp.json();
-      setQuestions(data);
+      console.log("Quiz Data Received:", data);
+      
+      // Ensure data is an array
+      if (Array.isArray(data)) {
+        setQuestions(data);
+      } else if (data && data.questions && Array.isArray(data.questions)) {
+        setQuestions(data.questions);
+      } else {
+        console.error("Malformed quiz data received:", data);
+        setQuestions([]);
+      }
       setLoading(false);
     } catch (err) {
-      console.error("Failed to fetch questions", err);
+      console.error("Failed to fetch questions:", err);
       setLoading(false);
+      setQuestions([]);
     }
   };
 
