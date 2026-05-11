@@ -7,6 +7,8 @@ from routes.match_routes import router as match_router
 from routes.chat_routes import router as chat_router
 from routes.news_routes import router as news_router
 from routes.notification_routes import router as notification_router
+from routes.quiz_routes import router as quiz_router
+
 import uvicorn
 import os
 import sys
@@ -29,6 +31,8 @@ app.include_router(match_router, prefix="/api/v1")
 app.include_router(chat_router, prefix="/api/v1")
 app.include_router(news_router, prefix="/api/v1")
 app.include_router(notification_router, prefix="/api/v1")
+app.include_router(quiz_router, prefix="/api/v1")
+
 
 @app.get("/api/health")
 def health():

@@ -10,6 +10,8 @@ import Updates from './pages/Updates';
 import About from './pages/About';
 import Account from './pages/Account';
 import Admin from './pages/Admin';
+import Quiz from './pages/Quiz';
+
 
 // --- AUTH PAGE COMPONENT ---
 // ... (Auth logic unchanged, omitting to prevent accidental removal) ...
@@ -214,6 +216,8 @@ const App = () => {
           <Route path="startup" element={<Startup />} />
           <Route path="account" element={<Account user={user} profile={profile} />} />
           <Route path="admin" element={<Admin user={user} />} />
+          <Route path="quiz" element={<Quiz user={user} profile={profile} />} />
+
           <Route path="updates" element={<Updates />} />
           <Route path="about" element={<About />} />
           <Route path="*" element={<Navigate to="/" replace />} />
