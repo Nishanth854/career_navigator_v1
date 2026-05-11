@@ -17,5 +17,7 @@ else:
     model = None
 
 if __name__ == "__main__":
-    print("🚀 StudentMate is starting...")
-    uvicorn.run(app, host="0.0.0.0", port=8001)
+    port = int(os.environ.get("PORT", 8001))
+    print(f"🚀 StudentMate is starting on port {port}...")
+    uvicorn.run(app, host="0.0.0.0", port=port)
+

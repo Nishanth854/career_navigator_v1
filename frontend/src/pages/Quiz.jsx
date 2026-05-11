@@ -47,7 +47,8 @@ const Quiz = ({ user, profile }) => {
 
   const fetchQuestions = async () => {
     try {
-      const resp = await fetch(`http://localhost:8001/api/v1/quiz/questions?dept=${profile?.department || 'Computer Science'}`);
+      const resp = await fetch(`/api/v1/quiz/questions?dept=${profile?.department || 'Computer Science'}`);
+
       const data = await resp.json();
       setQuestions(data);
       setLoading(false);
@@ -87,7 +88,8 @@ const Quiz = ({ user, profile }) => {
     const today = new Date().toISOString().split('T')[0];
     
     // Calculate new tier
-    const resp = await fetch('http://localhost:8001/api/v1/quiz/calculate-tier', {
+    const resp = await fetch('/api/v1/quiz/calculate-tier', {
+
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ total_score: newTotalScore })
@@ -215,6 +217,19 @@ const Quiz = ({ user, profile }) => {
 
   const currentQuestion = questions[currentIdx];
 
+  if (quizStarted && (!questions || questions.length === 0)) {
+    return (
+      <div className="max-w-2xl mx-auto text-center py-20 space-y-6">
+        <div className="w-20 h-20 bg-rose-500/10 rounded-full flex items-center justify-center mx-auto border border-rose-500/30">
+          <XCircle size={40} className="text-rose-400" />
+        </div>
+        <h2 className="text-3xl font-black text-white">Connection Error</h2>
+        <p className="text-slate-400">Unable to reach the technical engine. Please ensure the backend server is running on port 8001 and try again.</p>
+        <button onClick={() => window.location.reload()} className="px-8 py-3 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl text-white font-bold transition-all">Retry Connection</button>
+      </div>
+    );
+  }
+
   return (
     <div className="max-w-3xl mx-auto py-10 space-y-8 animate-in fade-in duration-500">
       {/* Quiz Header */}
@@ -233,34 +248,36 @@ const Quiz = ({ user, profile }) => {
       </div>
 
       {/* Question Card */}
-      <div className="bg-white/[0.02] backdrop-blur-3xl border border-white/10 p-10 rounded-[3rem] shadow-2xl relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-500/5 blur-[100px] rounded-full pointer-events-none"></div>
-        <h2 className="text-3xl font-black text-white leading-tight mb-10 relative z-10">{currentQuestion.question}</h2>
+      {currentQuestion && (
+        <div className="bg-white/[0.02] backdrop-blur-3xl border border-white/10 p-10 rounded-[3rem] shadow-2xl relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-500/5 blur-[100px] rounded-full pointer-events-none"></div>
+            <h2 className="text-3xl font-black text-white leading-tight mb-10 relative z-10">{currentQuestion.question}</h2>
 
-        <div className="grid gap-4 relative z-10">
-          {currentQuestion.options.map((opt, i) => {
-            let style = "bg-white/5 border-white/10 text-slate-300 hover:bg-white/10 hover:border-white/20";
-            if (selectedAns !== null) {
-              if (i === currentQuestion.correct) style = "bg-emerald-500/20 border-emerald-500/50 text-emerald-400";
-              else if (i === selectedAns) style = "bg-rose-500/20 border-rose-500/50 text-rose-400";
-              else style = "bg-white/2 border-white/5 text-slate-600 opacity-50";
-            }
+            <div className="grid gap-4 relative z-10">
+            {currentQuestion.options.map((opt, i) => {
+                let style = "bg-white/5 border-white/10 text-slate-300 hover:bg-white/10 hover:border-white/20";
+                if (selectedAns !== null) {
+                if (i === currentQuestion.correct) style = "bg-emerald-500/20 border-emerald-500/50 text-emerald-400";
+                else if (i === selectedAns) style = "bg-rose-500/20 border-rose-500/50 text-rose-400";
+                else style = "bg-white/2 border-white/5 text-slate-600 opacity-50";
+                }
 
-            return (
-              <button 
-                key={i}
-                disabled={selectedAns !== null}
-                onClick={() => handleAnswer(i)}
-                className={`w-full text-left p-6 rounded-2xl border text-lg font-bold transition-all flex items-center justify-between group ${style}`}
-              >
-                <span>{opt}</span>
-                {selectedAns !== null && i === currentQuestion.correct && <CheckCircle2 size={24} />}
-                {selectedAns !== null && i === selectedAns && i !== currentQuestion.correct && <XCircle size={24} />}
-              </button>
-            );
-          })}
+                return (
+                <button 
+                    key={i}
+                    disabled={selectedAns !== null}
+                    onClick={() => handleAnswer(i)}
+                    className={`w-full text-left p-6 rounded-2xl border text-lg font-bold transition-all flex items-center justify-between group ${style}`}
+                >
+                    <span>{opt}</span>
+                    {selectedAns !== null && i === currentQuestion.correct && <CheckCircle2 size={24} />}
+                    {selectedAns !== null && i === selectedAns && i !== currentQuestion.correct && <XCircle size={24} />}
+                </button>
+                );
+            })}
+            </div>
         </div>
-      </div>
+      )}
 
       <div className="flex justify-center text-slate-500 text-xs font-bold uppercase tracking-widest italic">
         Select the most accurate technical solution

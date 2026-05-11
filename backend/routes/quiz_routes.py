@@ -46,24 +46,39 @@ async def get_quiz_questions(dept: str = "General Technology"):
             {{
                 "question": "The question text",
                 "options": ["Option A", "Option B", "Option C", "Option D"],
-                "correct": 0 (index of the correct option)
+                "correct": 0
             }}
         ]
         Ensure the questions are challenging but fair for a university student.
         """
         response = model.generate_content(prompt)
-        # Clean the response to ensure it's valid JSON
-        json_str = response.text.strip()
-        if json_str.startswith("```json"):
-            json_str = json_str[7:-3].strip()
-        elif json_str.startswith("```"):
-            json_str = json_str[3:-3].strip()
-            
-        questions = json.loads(json_str)
-        return questions
+        text = response.text.strip()
+        
+        # Robust JSON extraction
+        try:
+            # Try to find the first [ and last ]
+            start = text.find('[')
+            end = text.rfind(']') + 1
+            if start != -1 and end != -1:
+                json_str = text[start:end]
+                questions = json.loads(json_str)
+                return questions
+            else:
+                raise ValueError("No JSON array found in response")
+        except Exception as e:
+            print(f"JSON Parse Error: {e} | Raw Text: {text}")
+            # Fallback to hardcoded if AI fails
+            return [
+                {"question": "Which of these is a popular JavaScript framework?", "options": ["React", "Django", "Laravel", "Flask"], "correct": 0},
+                {"question": "What does API stand for?", "options": ["App Programming Interface", "Application Program Interconnect", "Application Programming Interface", "Applied Protocol Integration"], "correct": 2},
+                {"question": "In Python, which keyword is used to define a function?", "options": ["func", "def", "define", "function"], "correct": 1}
+            ]
     except Exception as e:
         print(f"Gemini Quiz Generation Error: {e}")
-        raise HTTPException(status_code=500, detail="Failed to generate questions")
+        return [
+            {"question": "What is the capital of cloud computing?", "options": ["AWS", "Azure", "GCP", "The Internet"], "correct": 0}
+        ]
+
 
 @router.post("/quiz/calculate-tier")
 async def calculate_tier(data: dict):
