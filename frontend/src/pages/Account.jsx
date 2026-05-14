@@ -65,6 +65,10 @@ const Account = ({ profile, user }) => {
         data: { phone: newPhone }
       });
       if (error) throw error;
+      
+      // Sync to profiles table for Admin view
+      await supabase.from('profiles').update({ phone: newPhone }).eq('id', user.id);
+      
       alert("Mobile number updated successfully!");
       window.location.reload();
     } catch (err) {
@@ -123,7 +127,9 @@ const Account = ({ profile, user }) => {
         annual_income: annualIncome,
         parental_profession: parentalProfession,
         living_state: livingState,
-        disability_status: disabilityStatus
+        disability_status: disabilityStatus,
+        email: user?.email,
+        phone: user?.user_metadata?.phone
       }).eq('id', user.id);
       
       if (error) throw error;

@@ -254,6 +254,16 @@ const Admin = ({ user }) => {
             
             <div className="p-6 space-y-6">
               <div className="grid grid-cols-2 gap-4">
+                <div className="bg-slate-800/50 p-4 rounded-2xl border border-slate-700/50 col-span-2 flex items-center justify-between">
+                  <div>
+                    <p className="text-[10px] uppercase font-bold tracking-widest text-slate-500 mb-1">Email Address</p>
+                    <p className="text-sm font-bold text-slate-200">{selectedUser.email || 'N/A (Not Synced)'}</p>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-[10px] uppercase font-bold tracking-widest text-slate-500 mb-1">Mobile Number</p>
+                    <p className="text-sm font-bold text-slate-200">{selectedUser.phone || 'N/A (Not Synced)'}</p>
+                  </div>
+                </div>
                 <div className="bg-slate-800/50 p-4 rounded-2xl border border-slate-700/50">
                   <p className="text-[10px] uppercase font-bold tracking-widest text-slate-500 mb-1">Full Name</p>
                   <p className="text-sm font-bold text-slate-200">{selectedUser.full_name || 'N/A'}</p>
@@ -263,34 +273,65 @@ const Admin = ({ user }) => {
                   <p className="text-sm font-bold text-slate-200">{selectedUser.dob || 'N/A'}</p>
                 </div>
                 <div className="bg-slate-800/50 p-4 rounded-2xl border border-slate-700/50 col-span-2">
-                  <p className="text-[10px] uppercase font-bold tracking-widest text-slate-500 mb-1">College</p>
-                  <p className="text-sm font-bold text-slate-200">{selectedUser.college || 'N/A'}</p>
+                  <p className="text-[10px] uppercase font-bold tracking-widest text-slate-500 mb-1">College & Department</p>
+                  <p className="text-sm font-bold text-slate-200">{selectedUser.college || 'N/A'} - {selectedUser.department || 'N/A'}</p>
                 </div>
-                <div className="bg-slate-800/50 p-4 rounded-2xl border border-slate-700/50 col-span-2">
-                  <p className="text-[10px] uppercase font-bold tracking-widest text-slate-500 mb-1">Department</p>
-                  <p className="text-sm font-bold text-slate-200">{selectedUser.department || 'N/A'}</p>
+                <div className="bg-slate-800/50 p-4 rounded-2xl border border-slate-700/50">
+                  <p className="text-[10px] uppercase font-bold tracking-widest text-slate-500 mb-1">GPA</p>
+                  <p className="text-sm font-bold text-slate-200">{selectedUser.gpa || 'N/A'}</p>
+                </div>
+                <div className="bg-slate-800/50 p-4 rounded-2xl border border-slate-700/50">
+                  <p className="text-[10px] uppercase font-bold tracking-widest text-slate-500 mb-1">Valuation Score</p>
+                  <p className="text-sm font-bold text-slate-200">{selectedUser.valuation_score || 'N/A'}</p>
                 </div>
               </div>
 
               <div className="pt-4 border-t border-slate-800">
                 <h3 className="text-sm font-bold text-slate-400 mb-4 uppercase tracking-wider">Uploaded Documents</h3>
-                <div className="flex gap-4">
+                <div className="grid grid-cols-2 gap-3">
                   {selectedUser.aadhar_url ? (
-                    <a href={selectedUser.aadhar_url} target="_blank" rel="noreferrer" className="flex items-center gap-2 bg-indigo-500/10 border border-indigo-500/30 text-indigo-400 px-4 py-3 rounded-xl hover:bg-indigo-500/20 transition-colors text-sm font-bold flex-1 justify-center">
-                      <FileText size={16} /> View Aadhar Card
+                    <a href={selectedUser.aadhar_url} target="_blank" rel="noreferrer" className="flex items-center gap-2 bg-indigo-500/10 border border-indigo-500/30 text-indigo-400 px-3 py-2.5 rounded-xl hover:bg-indigo-500/20 transition-colors text-xs font-bold justify-center">
+                      <FileText size={14} /> View Aadhar
                     </a>
                   ) : (
-                    <div className="flex items-center gap-2 bg-slate-800/50 border border-slate-700/50 text-slate-500 px-4 py-3 rounded-xl text-sm font-bold flex-1 justify-center">
-                      <FileText size={16} /> No Aadhar Uploaded
+                    <div className="flex items-center gap-2 bg-slate-800/50 border border-slate-700/50 text-slate-500 px-3 py-2.5 rounded-xl text-xs font-bold justify-center">
+                      <FileText size={14} /> No Aadhar
                     </div>
                   )}
                   {selectedUser.pan_url ? (
-                    <a href={selectedUser.pan_url} target="_blank" rel="noreferrer" className="flex items-center gap-2 bg-blue-500/10 border border-blue-500/30 text-blue-400 px-4 py-3 rounded-xl hover:bg-blue-500/20 transition-colors text-sm font-bold flex-1 justify-center">
-                      <FileText size={16} /> View PAN Card
+                    <a href={selectedUser.pan_url} target="_blank" rel="noreferrer" className="flex items-center gap-2 bg-blue-500/10 border border-blue-500/30 text-blue-400 px-3 py-2.5 rounded-xl hover:bg-blue-500/20 transition-colors text-xs font-bold justify-center">
+                      <FileText size={14} /> View PAN
                     </a>
                   ) : (
-                    <div className="flex items-center gap-2 bg-slate-800/50 border border-slate-700/50 text-slate-500 px-4 py-3 rounded-xl text-sm font-bold flex-1 justify-center">
-                      <FileText size={16} /> No PAN Uploaded
+                    <div className="flex items-center gap-2 bg-slate-800/50 border border-slate-700/50 text-slate-500 px-3 py-2.5 rounded-xl text-xs font-bold justify-center">
+                      <FileText size={14} /> No PAN
+                    </div>
+                  )}
+                  {selectedUser.community_url ? (
+                    <a href={selectedUser.community_url} target="_blank" rel="noreferrer" className="flex items-center gap-2 bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 px-3 py-2.5 rounded-xl hover:bg-emerald-500/20 transition-colors text-xs font-bold justify-center">
+                      <FileText size={14} /> Community Cert
+                    </a>
+                  ) : (
+                    <div className="flex items-center gap-2 bg-slate-800/50 border border-slate-700/50 text-slate-500 px-3 py-2.5 rounded-xl text-xs font-bold justify-center">
+                      <FileText size={14} /> No Community Cert
+                    </div>
+                  )}
+                  {selectedUser.income_url ? (
+                    <a href={selectedUser.income_url} target="_blank" rel="noreferrer" className="flex items-center gap-2 bg-yellow-500/10 border border-yellow-500/30 text-yellow-400 px-3 py-2.5 rounded-xl hover:bg-yellow-500/20 transition-colors text-xs font-bold justify-center">
+                      <FileText size={14} /> Income Cert
+                    </a>
+                  ) : (
+                    <div className="flex items-center gap-2 bg-slate-800/50 border border-slate-700/50 text-slate-500 px-3 py-2.5 rounded-xl text-xs font-bold justify-center">
+                      <FileText size={14} /> No Income Cert
+                    </div>
+                  )}
+                  {selectedUser.transcript_url ? (
+                    <a href={selectedUser.transcript_url} target="_blank" rel="noreferrer" className="flex items-center gap-2 bg-pink-500/10 border border-pink-500/30 text-pink-400 px-3 py-2.5 rounded-xl hover:bg-pink-500/20 transition-colors text-xs font-bold justify-center col-span-2">
+                      <FileText size={14} /> Academic Transcript
+                    </a>
+                  ) : (
+                    <div className="flex items-center gap-2 bg-slate-800/50 border border-slate-700/50 text-slate-500 px-3 py-2.5 rounded-xl text-xs font-bold justify-center col-span-2">
+                      <FileText size={14} /> No Academic Transcript
                     </div>
                   )}
                 </div>
