@@ -14,7 +14,7 @@ GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 if GEMINI_API_KEY:
     try:
         genai.configure(api_key=GEMINI_API_KEY)
-        model = genai.GenerativeModel('gemini-1.5-flash')
+        model = genai.GenerativeModel('gemini-2.5-flash')
     except Exception as e:
         print(f"Failed to configure Gemini in quiz_routes: {e}")
         model = None
@@ -40,7 +40,7 @@ async def get_quiz_questions(dept: str = "General Technology"):
 
     try:
         prompt = f"""
-        Generate 5 high-quality technical multiple-choice questions for a student in the department of {dept}.
+        Generate 10 high-quality technical multiple-choice questions for a student in the department of {dept}.
         Return ONLY a JSON array of objects with the following structure:
         [
             {{
