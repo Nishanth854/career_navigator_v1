@@ -111,7 +111,7 @@ async def manual_valuation(data: dict):
     if GEMINI_API_KEY:
         try:
             genai.configure(api_key=GEMINI_API_KEY)
-            model = genai.GenerativeModel('gemini-flash-latest')
+            model = genai.GenerativeModel('gemini-1.5-flash')
             prompt = f"""
             You are StudentMate AI. Analyze this student:
             Name: {name}, Dept: {department}, Skills: {', '.join(skills)}, Certifications: {', '.join(certifications)}, GPA: {gpa}, Arrears: {arrears}.
@@ -169,7 +169,7 @@ async def analyze_scheme(data: dict):
         
     try:
         genai.configure(api_key=GEMINI_API_KEY)
-        model = genai.GenerativeModel('gemini-flash-latest')
+        model = genai.GenerativeModel('gemini-1.5-flash')
         prompt = f"""
         Act as an expert career advisor. The student clicked on an online {type_str} titled '{title}' with this URL: {url}.
         Provide a highly realistic breakdown of what is usually required to apply for this.
@@ -222,7 +222,7 @@ async def startup_valuation(data: dict):
     if GEMINI_API_KEY:
         try:
             genai.configure(api_key=GEMINI_API_KEY)
-            model = genai.GenerativeModel('gemini-flash-latest')
+            model = genai.GenerativeModel('gemini-1.5-flash')
             prompt = f"""
             You are an expert AI Startup Advisor and Venture Capital Analyst. Analyze this new startup concept:
             Title: {startup_title}
