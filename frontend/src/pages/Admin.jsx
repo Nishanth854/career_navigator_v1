@@ -242,8 +242,8 @@ const Admin = ({ user }) => {
       {/* VIEW FULL DETAILS MODAL */}
       {selectedUser && (
         <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-[#0f172a] border border-slate-800 w-full max-w-2xl rounded-3xl overflow-hidden shadow-2xl animate-in fade-in zoom-in-95 duration-300">
-            <div className="p-6 border-b border-slate-800 flex items-center justify-between bg-slate-900/50">
+          <div className="bg-[#0f172a] border border-slate-800 w-full max-w-2xl rounded-3xl overflow-hidden shadow-2xl animate-in fade-in zoom-in-95 duration-300 max-h-[90vh] flex flex-col">
+            <div className="p-6 border-b border-slate-800 flex items-center justify-between bg-slate-900/50 shrink-0">
               <h2 className="text-xl font-black text-white flex items-center gap-2">
                 <UserCheck className="text-indigo-500" /> Student Profile Details
               </h2>
@@ -252,7 +252,7 @@ const Admin = ({ user }) => {
               </button>
             </div>
             
-            <div className="p-6 space-y-6">
+            <div className="p-6 space-y-6 overflow-y-auto">
               <div className="grid grid-cols-2 gap-4">
                 <div className="bg-slate-800/50 p-4 rounded-2xl border border-slate-700/50 col-span-2 flex items-center justify-between">
                   <div>
@@ -338,7 +338,7 @@ const Admin = ({ user }) => {
               </div>
             </div>
 
-            <div className="p-4 border-t border-slate-800 bg-slate-900/50 flex justify-end gap-3">
+            <div className="p-4 border-t border-slate-800 bg-slate-900/50 flex justify-end gap-3 shrink-0">
               <button 
                 onClick={() => setSelectedUser(null)}
                 className="px-6 py-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold transition-colors text-sm"
