@@ -57,6 +57,24 @@ const Account = ({ profile, user }) => {
     }
   };
 
+  const [syncingContact, setSyncingContact] = useState(false);
+  
+  const handleSyncContact = async () => {
+    setSyncingContact(true);
+    try {
+      const { error } = await supabase.from('profiles').update({
+        email: user?.email,
+        phone: user?.user_metadata?.phone
+      }).eq('id', user.id);
+      if (error) throw error;
+      alert("Contact info synced to Admin Panel successfully!");
+    } catch (err) {
+      alert("Failed to sync contact info: " + err.message);
+    } finally {
+      setSyncingContact(false);
+    }
+  };
+
   const handleSavePhone = async () => {
     if (!newPhone) return;
     setSavingPhone(true);
@@ -432,6 +450,9 @@ const Account = ({ profile, user }) => {
 
             <button onClick={handleTestAlert} className="w-full mt-4 bg-pink-600/20 text-pink-400 border border-pink-500/30 hover:bg-pink-600/30 py-3 rounded-xl text-sm font-bold transition-all shadow-lg">
               {testAlertLoading ? 'Dispatching...' : 'Send Test Alert'}
+            </button>
+            <button onClick={handleSyncContact} disabled={syncingContact} className="w-full mt-2 bg-slate-800/80 text-slate-300 border border-slate-700 hover:bg-slate-700 py-3 rounded-xl text-sm font-bold transition-all flex items-center justify-center gap-2">
+              <Upload size={16} /> {syncingContact ? 'Syncing...' : 'Sync Contact Info to Admin'}
             </button>
           </div>
 

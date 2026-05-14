@@ -13,6 +13,7 @@ const Admin = ({ user }) => {
   const [fetchError, setFetchError] = useState(null);
   const [selectedUser, setSelectedUser] = useState(null);
   const [activeTab, setActiveTab] = useState('students');
+  const [modalTab, setModalTab] = useState('personal');
 
   useEffect(() => {
     if (activeTab === 'students') {
@@ -243,52 +244,107 @@ const Admin = ({ user }) => {
       {selectedUser && (
         <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
           <div className="bg-[#0f172a] border border-slate-800 w-full max-w-2xl rounded-3xl overflow-hidden shadow-2xl animate-in fade-in zoom-in-95 duration-300 max-h-[90vh] flex flex-col">
-            <div className="p-6 border-b border-slate-800 flex items-center justify-between bg-slate-900/50 shrink-0">
-              <h2 className="text-xl font-black text-white flex items-center gap-2">
-                <UserCheck className="text-indigo-500" /> Student Profile Details
-              </h2>
-              <button onClick={() => setSelectedUser(null)} className="p-2 bg-white/5 hover:bg-white/10 rounded-full text-slate-400 hover:text-white transition-colors">
-                <XCircle size={20} />
-              </button>
+            <div className="p-6 border-b border-slate-800 flex flex-col gap-4 bg-slate-900/50 shrink-0">
+              <div className="flex items-center justify-between">
+                <h2 className="text-xl font-black text-white flex items-center gap-2">
+                  <UserCheck className="text-indigo-500" /> Student Profile Details
+                </h2>
+                <button onClick={() => setSelectedUser(null)} className="p-2 bg-white/5 hover:bg-white/10 rounded-full text-slate-400 hover:text-white transition-colors">
+                  <XCircle size={20} />
+                </button>
+              </div>
+              <div className="flex gap-2 bg-slate-800/50 p-1 rounded-xl w-fit border border-slate-700/50">
+                <button onClick={() => setModalTab('personal')} className={`py-1.5 px-4 text-xs font-bold rounded-lg transition-all ${modalTab === 'personal' ? 'bg-indigo-600 text-white' : 'text-slate-400 hover:text-slate-200'}`}>Personal</button>
+                <button onClick={() => setModalTab('academic')} className={`py-1.5 px-4 text-xs font-bold rounded-lg transition-all ${modalTab === 'academic' ? 'bg-blue-600 text-white' : 'text-slate-400 hover:text-slate-200'}`}>Academic</button>
+                <button onClick={() => setModalTab('financial')} className={`py-1.5 px-4 text-xs font-bold rounded-lg transition-all ${modalTab === 'financial' ? 'bg-emerald-600 text-white' : 'text-slate-400 hover:text-slate-200'}`}>Financial</button>
+                <button onClick={() => setModalTab('documents')} className={`py-1.5 px-4 text-xs font-bold rounded-lg transition-all ${modalTab === 'documents' ? 'bg-pink-600 text-white' : 'text-slate-400 hover:text-slate-200'}`}>Documents</button>
+              </div>
             </div>
             
             <div className="p-6 space-y-6 overflow-y-auto">
-              <div className="grid grid-cols-2 gap-4">
-                <div className="bg-slate-800/50 p-4 rounded-2xl border border-slate-700/50 col-span-2 flex items-center justify-between">
-                  <div>
-                    <p className="text-[10px] uppercase font-bold tracking-widest text-slate-500 mb-1">Email Address</p>
-                    <p className="text-sm font-bold text-slate-200">{selectedUser.email || 'N/A (Not Synced)'}</p>
+              {modalTab === 'personal' && (
+                <div className="grid grid-cols-2 gap-4 animate-in fade-in slide-in-from-bottom-2 duration-300">
+                  <div className="bg-slate-800/50 p-4 rounded-2xl border border-slate-700/50 col-span-2 flex items-center justify-between">
+                    <div>
+                      <p className="text-[10px] uppercase font-bold tracking-widest text-slate-500 mb-1">Email Address</p>
+                      <p className="text-sm font-bold text-slate-200">{selectedUser.email || 'N/A (Not Synced)'}</p>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-[10px] uppercase font-bold tracking-widest text-slate-500 mb-1">Mobile Number</p>
+                      <p className="text-sm font-bold text-slate-200">{selectedUser.phone || 'N/A (Not Synced)'}</p>
+                    </div>
                   </div>
-                  <div className="text-right">
-                    <p className="text-[10px] uppercase font-bold tracking-widest text-slate-500 mb-1">Mobile Number</p>
-                    <p className="text-sm font-bold text-slate-200">{selectedUser.phone || 'N/A (Not Synced)'}</p>
+                  <div className="bg-slate-800/50 p-4 rounded-2xl border border-slate-700/50 col-span-2">
+                    <p className="text-[10px] uppercase font-bold tracking-widest text-slate-500 mb-1">Full Name</p>
+                    <p className="text-sm font-bold text-slate-200">{selectedUser.full_name || 'N/A'}</p>
+                  </div>
+                  <div className="bg-slate-800/50 p-4 rounded-2xl border border-slate-700/50">
+                    <p className="text-[10px] uppercase font-bold tracking-widest text-slate-500 mb-1">Date of Birth</p>
+                    <p className="text-sm font-bold text-slate-200">{selectedUser.dob || 'N/A'}</p>
+                  </div>
+                  <div className="bg-slate-800/50 p-4 rounded-2xl border border-slate-700/50">
+                    <p className="text-[10px] uppercase font-bold tracking-widest text-slate-500 mb-1">Gender</p>
+                    <p className="text-sm font-bold text-slate-200">{selectedUser.gender || 'N/A'}</p>
+                  </div>
+                  <div className="bg-slate-800/50 p-4 rounded-2xl border border-slate-700/50">
+                    <p className="text-[10px] uppercase font-bold tracking-widest text-slate-500 mb-1">Marital Status</p>
+                    <p className="text-sm font-bold text-slate-200">{selectedUser.marital_status || 'N/A'}</p>
+                  </div>
+                  <div className="bg-slate-800/50 p-4 rounded-2xl border border-slate-700/50 col-span-2">
+                    <p className="text-[10px] uppercase font-bold tracking-widest text-slate-500 mb-1">Address</p>
+                    <p className="text-sm font-bold text-slate-200">{selectedUser.address || 'N/A'}</p>
                   </div>
                 </div>
-                <div className="bg-slate-800/50 p-4 rounded-2xl border border-slate-700/50">
-                  <p className="text-[10px] uppercase font-bold tracking-widest text-slate-500 mb-1">Full Name</p>
-                  <p className="text-sm font-bold text-slate-200">{selectedUser.full_name || 'N/A'}</p>
-                </div>
-                <div className="bg-slate-800/50 p-4 rounded-2xl border border-slate-700/50">
-                  <p className="text-[10px] uppercase font-bold tracking-widest text-slate-500 mb-1">Date of Birth</p>
-                  <p className="text-sm font-bold text-slate-200">{selectedUser.dob || 'N/A'}</p>
-                </div>
-                <div className="bg-slate-800/50 p-4 rounded-2xl border border-slate-700/50 col-span-2">
-                  <p className="text-[10px] uppercase font-bold tracking-widest text-slate-500 mb-1">College & Department</p>
-                  <p className="text-sm font-bold text-slate-200">{selectedUser.college || 'N/A'} - {selectedUser.department || 'N/A'}</p>
-                </div>
-                <div className="bg-slate-800/50 p-4 rounded-2xl border border-slate-700/50">
-                  <p className="text-[10px] uppercase font-bold tracking-widest text-slate-500 mb-1">GPA</p>
-                  <p className="text-sm font-bold text-slate-200">{selectedUser.gpa || 'N/A'}</p>
-                </div>
-                <div className="bg-slate-800/50 p-4 rounded-2xl border border-slate-700/50">
-                  <p className="text-[10px] uppercase font-bold tracking-widest text-slate-500 mb-1">Valuation Score</p>
-                  <p className="text-sm font-bold text-slate-200">{selectedUser.valuation_score || 'N/A'}</p>
-                </div>
-              </div>
+              )}
 
-              <div className="pt-4 border-t border-slate-800">
-                <h3 className="text-sm font-bold text-slate-400 mb-4 uppercase tracking-wider">Uploaded Documents</h3>
-                <div className="grid grid-cols-2 gap-3">
+              {modalTab === 'academic' && (
+                <div className="grid grid-cols-2 gap-4 animate-in fade-in slide-in-from-bottom-2 duration-300">
+                  <div className="bg-slate-800/50 p-4 rounded-2xl border border-slate-700/50 col-span-2">
+                    <p className="text-[10px] uppercase font-bold tracking-widest text-slate-500 mb-1">College & Department</p>
+                    <p className="text-sm font-bold text-slate-200">{selectedUser.college || 'N/A'} - {selectedUser.department || 'N/A'}</p>
+                  </div>
+                  <div className="bg-slate-800/50 p-4 rounded-2xl border border-slate-700/50">
+                    <p className="text-[10px] uppercase font-bold tracking-widest text-slate-500 mb-1">Year of Study</p>
+                    <p className="text-sm font-bold text-slate-200">{selectedUser.year_of_study || 'N/A'}</p>
+                  </div>
+                  <div className="bg-slate-800/50 p-4 rounded-2xl border border-slate-700/50">
+                    <p className="text-[10px] uppercase font-bold tracking-widest text-slate-500 mb-1">GPA</p>
+                    <p className="text-sm font-bold text-slate-200">{selectedUser.gpa || 'N/A'}</p>
+                  </div>
+                  <div className="bg-slate-800/50 p-4 rounded-2xl border border-slate-700/50">
+                    <p className="text-[10px] uppercase font-bold tracking-widest text-slate-500 mb-1">Valuation Score</p>
+                    <p className="text-sm font-bold text-slate-200">{selectedUser.valuation_score || 'N/A'}</p>
+                  </div>
+                  <div className="bg-slate-800/50 p-4 rounded-2xl border border-slate-700/50">
+                    <p className="text-[10px] uppercase font-bold tracking-widest text-slate-500 mb-1">Quiz Status</p>
+                    <p className="text-sm font-bold text-slate-200">{selectedUser.quiz_tier || 'Bronze'} ({selectedUser.quiz_score || 0} pts)</p>
+                  </div>
+                </div>
+              )}
+
+              {modalTab === 'financial' && (
+                <div className="grid grid-cols-2 gap-4 animate-in fade-in slide-in-from-bottom-2 duration-300">
+                  <div className="bg-slate-800/50 p-4 rounded-2xl border border-slate-700/50">
+                    <p className="text-[10px] uppercase font-bold tracking-widest text-slate-500 mb-1">Annual Income</p>
+                    <p className="text-sm font-bold text-slate-200">{selectedUser.annual_income || 'N/A'}</p>
+                  </div>
+                  <div className="bg-slate-800/50 p-4 rounded-2xl border border-slate-700/50">
+                    <p className="text-[10px] uppercase font-bold tracking-widest text-slate-500 mb-1">Parental Profession</p>
+                    <p className="text-sm font-bold text-slate-200">{selectedUser.parental_profession || 'N/A'}</p>
+                  </div>
+                  <div className="bg-slate-800/50 p-4 rounded-2xl border border-slate-700/50">
+                    <p className="text-[10px] uppercase font-bold tracking-widest text-slate-500 mb-1">Living State</p>
+                    <p className="text-sm font-bold text-slate-200">{selectedUser.living_state || 'N/A'}</p>
+                  </div>
+                  <div className="bg-slate-800/50 p-4 rounded-2xl border border-slate-700/50">
+                    <p className="text-[10px] uppercase font-bold tracking-widest text-slate-500 mb-1">Disability Status</p>
+                    <p className="text-sm font-bold text-slate-200">{selectedUser.disability_status || 'N/A'}</p>
+                  </div>
+                </div>
+              )}
+
+              {modalTab === 'documents' && (
+                <div className="grid grid-cols-2 gap-3 animate-in fade-in slide-in-from-bottom-2 duration-300">
                   {selectedUser.aadhar_url ? (
                     <a href={selectedUser.aadhar_url} target="_blank" rel="noreferrer" className="flex items-center gap-2 bg-indigo-500/10 border border-indigo-500/30 text-indigo-400 px-3 py-2.5 rounded-xl hover:bg-indigo-500/20 transition-colors text-xs font-bold justify-center">
                       <FileText size={14} /> View Aadhar
@@ -335,7 +391,7 @@ const Admin = ({ user }) => {
                     </div>
                   )}
                 </div>
-              </div>
+              )}
             </div>
 
             <div className="p-4 border-t border-slate-800 bg-slate-900/50 flex justify-end gap-3 shrink-0">
