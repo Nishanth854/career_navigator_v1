@@ -203,7 +203,7 @@ const App = () => {
 
   if (!user) return <AuthPage />;
   if (loadingProfile) return <div className="min-h-screen bg-[#05050C] flex items-center justify-center text-indigo-400 font-bold tracking-widest text-sm uppercase animate-pulse">Initializing Engine...</div>;
-  if (!profile || !profile.full_name || !profile.college || !profile.aadhar_url) {
+  if (!profile || !profile.full_name || !profile.college) {
     return <ProfileCompletion user={user} onComplete={() => fetchProfile(user.id)} />
   }
 

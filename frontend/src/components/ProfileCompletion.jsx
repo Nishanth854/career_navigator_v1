@@ -109,7 +109,7 @@ const ProfileCompletion = ({ user, onComplete }) => {
                 <div className="bg-slate-800/50 p-5 rounded-2xl border border-slate-700/50">
                   <label className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3 flex items-center gap-2"><FileText size={14}/> Aadhar Card</label>
                   <div className="relative">
-                    <input required type="file" accept="image/*,.pdf" onChange={e => setFiles({...files, aadhar: e.target.files[0]})} className="absolute inset-0 w-full h-full opacity-0 cursor-pointer" />
+                    <input type="file" accept="image/*,.pdf" onChange={e => setFiles({...files, aadhar: e.target.files[0]})} className="absolute inset-0 w-full h-full opacity-0 cursor-pointer" />
                     <div className="flex items-center justify-center gap-2 bg-slate-800 border border-dashed border-slate-600 rounded-xl p-4 text-sm text-slate-300 group-hover:border-indigo-500 transition-colors">
                       <Upload size={18} className="text-indigo-400"/>
                       <span className="truncate max-w-[150px]">{files.aadhar ? files.aadhar.name : 'Upload File'}</span>
@@ -120,7 +120,7 @@ const ProfileCompletion = ({ user, onComplete }) => {
                 <div className="bg-slate-800/50 p-5 rounded-2xl border border-slate-700/50">
                   <label className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3 flex items-center gap-2"><FileText size={14}/> PAN Card</label>
                   <div className="relative">
-                    <input required type="file" accept="image/*,.pdf" onChange={e => setFiles({...files, pan: e.target.files[0]})} className="absolute inset-0 w-full h-full opacity-0 cursor-pointer" />
+                    <input type="file" accept="image/*,.pdf" onChange={e => setFiles({...files, pan: e.target.files[0]})} className="absolute inset-0 w-full h-full opacity-0 cursor-pointer" />
                     <div className="flex items-center justify-center gap-2 bg-slate-800 border border-dashed border-slate-600 rounded-xl p-4 text-sm text-slate-300 group-hover:border-indigo-500 transition-colors">
                       <Upload size={18} className="text-indigo-400"/>
                       <span className="truncate max-w-[150px]">{files.pan ? files.pan.name : 'Upload File'}</span>

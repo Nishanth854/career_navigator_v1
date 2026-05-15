@@ -350,29 +350,48 @@ const Account = ({ profile, user }) => {
               These documents are used by the system to verify the accuracy of your profile information.
             </p>
             <div className="space-y-3">
+              {/* Aadhar Row */}
               <div className="bg-slate-800/50 p-3 rounded-xl border border-slate-700/50 flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <div className="p-2 bg-blue-500/10 text-blue-400 rounded-lg"><FileText size={16}/></div>
+                  <div className="p-2 bg-indigo-500/10 text-indigo-400 rounded-lg"><FileText size={16}/></div>
                   <div>
-                    <p className="font-bold text-sm text-slate-200">Aadhar</p>
-                    <p className="text-[10px] text-emerald-400 font-bold uppercase">Verified</p>
+                    <p className="font-bold text-sm text-slate-200">Aadhar Card</p>
+                    <p className={`text-[10px] font-bold uppercase ${profile?.aadhar_url ? (profile.is_verified ? 'text-emerald-400' : 'text-indigo-400') : 'text-slate-500'}`}>
+                      {profile?.aadhar_url ? (profile.is_verified ? 'Verified' : 'Uploaded') : 'Pending'}
+                    </p>
                   </div>
                 </div>
-                {profile?.aadhar_url && (
-                  <a href={profile.aadhar_url} target="_blank" rel="noreferrer" className="text-xs font-bold text-blue-400 hover:text-blue-300 bg-blue-500/10 px-3 py-1.5 rounded-lg transition-colors">View</a>
-                )}
+                <div className="flex items-center gap-2">
+                  {profile?.aadhar_url && (
+                    <a href={profile.aadhar_url} target="_blank" rel="noreferrer" className="text-xs font-bold text-blue-400 hover:text-blue-300 bg-blue-500/10 px-3 py-1.5 rounded-lg transition-colors">View</a>
+                  )}
+                  <label className={`relative cursor-pointer flex items-center justify-center text-xs font-bold px-3 py-1.5 rounded-lg transition-colors ${profile?.aadhar_url ? 'text-slate-400 hover:text-white bg-slate-700/50 hover:bg-slate-700' : 'text-indigo-400 hover:text-indigo-300 bg-indigo-500/10 hover:bg-indigo-500/20'} ${uploadingDoc === 'aadhar' ? 'opacity-50 pointer-events-none' : ''}`}>
+                    <input type="file" accept="image/*,.pdf" className="sr-only" onChange={(e) => handleDocumentUpload(e, 'aadhar')} disabled={uploadingDoc === 'aadhar'} />
+                    {uploadingDoc === 'aadhar' ? '...' : (profile?.aadhar_url ? 'Replace' : 'Upload')}
+                  </label>
+                </div>
               </div>
+
+              {/* PAN Row */}
               <div className="bg-slate-800/50 p-3 rounded-xl border border-slate-700/50 flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <div className="p-2 bg-blue-500/10 text-blue-400 rounded-lg"><FileText size={16}/></div>
                   <div>
-                    <p className="font-bold text-sm text-slate-200">PAN</p>
-                    <p className="text-[10px] text-emerald-400 font-bold uppercase">Verified</p>
+                    <p className="font-bold text-sm text-slate-200">PAN Card</p>
+                    <p className={`text-[10px] font-bold uppercase ${profile?.pan_url ? (profile.is_verified ? 'text-emerald-400' : 'text-indigo-400') : 'text-slate-500'}`}>
+                      {profile?.pan_url ? (profile.is_verified ? 'Verified' : 'Uploaded') : 'Pending'}
+                    </p>
                   </div>
                 </div>
-                {profile?.pan_url && (
-                  <a href={profile.pan_url} target="_blank" rel="noreferrer" className="text-xs font-bold text-blue-400 hover:text-blue-300 bg-blue-500/10 px-3 py-1.5 rounded-lg transition-colors">View</a>
-                )}
+                <div className="flex items-center gap-2">
+                  {profile?.pan_url && (
+                    <a href={profile.pan_url} target="_blank" rel="noreferrer" className="text-xs font-bold text-blue-400 hover:text-blue-300 bg-blue-500/10 px-3 py-1.5 rounded-lg transition-colors">View</a>
+                  )}
+                  <label className={`relative cursor-pointer flex items-center justify-center text-xs font-bold px-3 py-1.5 rounded-lg transition-colors ${profile?.pan_url ? 'text-slate-400 hover:text-white bg-slate-700/50 hover:bg-slate-700' : 'text-indigo-400 hover:text-indigo-300 bg-indigo-500/10 hover:bg-indigo-500/20'} ${uploadingDoc === 'pan' ? 'opacity-50 pointer-events-none' : ''}`}>
+                    <input type="file" accept="image/*,.pdf" className="sr-only" onChange={(e) => handleDocumentUpload(e, 'pan')} disabled={uploadingDoc === 'pan'} />
+                    {uploadingDoc === 'pan' ? '...' : (profile?.pan_url ? 'Replace' : 'Upload')}
+                  </label>
+                </div>
               </div>
               {/* NEW DOCUMENT UPLOAD ROWS */}
               {['community', 'income', 'transcript'].map((docType) => (
